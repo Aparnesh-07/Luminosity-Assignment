@@ -1,0 +1,2918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMINOSITY — Studio Project Log &amp; Financials</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@400;500;600;700&family=Urbanist:ital,wght@0,300..900;1,300..900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Color Scheme Harmonized with Invoice Generator */
+    --bg-primary: #141210;
+    --bg-surface: #1c1a17;
+    --bg-surface-elevated: #252220;
+    --bg-surface-hover: #2e2a26;
+    --accent: #d9a463;
+    --accent-dark: #b9803c;
+    --accent-hover: #e5b47a;
+    --accent-dim: rgba(217, 164, 99, 0.14);
+    --accent-glow: rgba(217, 164, 99, 0.32);
+    --text-primary: #f5f2eb;
+    --text-secondary: #a39c8d;
+    --text-muted: #7a7568;
+    --border-subtle: rgba(221, 215, 201, 0.1);
+    --border-highlight: #4a453d;
+    --border-accent: rgba(217, 164, 99, 0.45);
+    --status-upcoming: #e07a5f;
+    --status-ongoing: #4da8da;
+    --status-pending: #d9a463;
+    --status-completed: #68bb76;
+    --danger: #c0554a;
+    --font-brand: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    --font-title: 'Plus Jakarta Sans', 'Outfit', sans-serif;
+    --font-body: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-liquid: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-full: 9999px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 110px;
+    overflow-x: hidden;
+  }
+  body.modal-open { overflow: hidden; }
+
+  /* ---- HEADER ---- */
+  .header {
+    background: rgba(20, 18, 16, 0.94);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-subtle);
+    position: sticky; top: 0; z-index: 40;
+    padding: 14px 36px;
+  }
+  .header-inner {
+    max-width: 1440px; margin: 0 auto;
+    display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-mark {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: #1c1a17; border: 1px solid var(--border-accent);
+    display: flex; align-items: center; justify-content: center;
+    padding: 5px;
+    box-shadow: 0 0 16px var(--accent-glow);
+    animation: pulseGlow 3.5s infinite alternate ease-in-out;
+  }
+  .brand-logo-img {
+    width: 100%; height: 100%; object-fit: contain;
+    filter: drop-shadow(0 0 4px rgba(217, 164, 99, 0.4));
+  }
+  @keyframes pulseGlow {
+    0% { transform: scale(0.95); opacity: 0.9; box-shadow: 0 0 10px var(--accent-glow); }
+    100% { transform: scale(1.08); opacity: 1; box-shadow: 0 0 24px var(--accent-glow); }
+  }
+  .brand-title { font-family: var(--font-brand); font-size: 20px; font-weight: 700; letter-spacing: 0.04em; }
+  .brand-subtitle { font-size: 11px; font-family: var(--font-mono); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+  /* ---- BUTTONS ---- */
+  .btn {
+    font-family: var(--font-body); font-size: 13px; font-weight: 600;
+    padding: 7px 15px; border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle); background: var(--bg-surface); color: var(--text-primary);
+    cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    transition: all 0.2s var(--ease-out); white-space: nowrap; text-decoration: none; user-select: none;
+  }
+  .btn:hover { background: var(--bg-surface-elevated); border-color: var(--border-highlight); transform: translateY(-1px); }
+  .btn:active { transform: scale(0.97) translateY(0); }
+  .btn-primary { background: var(--accent); color: #1c1a17; border-color: var(--accent); font-weight: 700; }
+  .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); box-shadow: 0 0 18px var(--accent-glow); color: #000; }
+  .btn-danger { color: #fca5a5; border-color: rgba(192, 85, 74, 0.35); background: rgba(192, 85, 74, 0.1); }
+  .btn-danger:hover { background: rgba(192, 85, 74, 0.22); border-color: var(--danger); color: #fff; }
+  .btn-success { color: #86efac; border-color: rgba(104, 187, 118, 0.35); background: rgba(104, 187, 118, 0.1); }
+  .btn-success:hover { background: rgba(104, 187, 118, 0.22); border-color: var(--status-completed); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-xs { padding: 3px 8px; font-size: 11px; }
+  .btn-ghost { background: transparent; border-color: transparent; color: var(--text-secondary); }
+  .btn-ghost:hover { background: var(--bg-surface); color: var(--text-primary); border-color: var(--border-subtle); }
+  
+  .badge-chip {
+    font-family: var(--font-mono); font-size: 10.5px; font-weight: 700;
+    padding: 2px 8px; border-radius: var(--radius-full);
+    background: var(--accent-dim); color: var(--accent); border: 1px solid var(--border-accent);
+    line-height: 1.2; display: inline-flex; align-items: center; gap: 4px;
+  }
+  .badge-chip.danger { background: rgba(192, 85, 74, 0.15); color: #fca5a5; border-color: rgba(192, 85, 74, 0.35); }
+  .badge-chip.success { background: rgba(104, 187, 118, 0.15); color: #86efac; border-color: rgba(104, 187, 118, 0.35); }
+
+  /* Skull Reset Button */
+  .btn-skull {
+    background: transparent; border: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--text-muted); padding: 5px 8px; font-size: 14px; border-radius: var(--radius-sm);
+    cursor: pointer; transition: all 0.2s var(--ease-out); line-height: 1; opacity: 0.5;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .btn-skull:hover { opacity: 1; color: #f87171; background: rgba(192, 85, 74, 0.15); border-color: rgba(192, 85, 74, 0.4); transform: scale(1.08); }
+  .btn-skull:active { transform: scale(0.92); }
+
+  /* ---- CONTROLS BAR ---- */
+  .controls-bar { max-width: 1440px; margin: 18px auto 0; padding: 0 36px; width: 100%; }
+  .controls-card {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+    padding: 12px 18px; display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+  .segmented-group {
+    display: inline-flex; background: var(--bg-primary); border: 1px solid var(--border-subtle);
+    padding: 3px; border-radius: var(--radius-sm); gap: 2px;
+  }
+  .segment-btn {
+    font-family: var(--font-body); font-size: 12px; font-weight: 600;
+    padding: 6px 12px; border-radius: 4px; border: none; background: transparent;
+    color: var(--text-secondary); cursor: pointer; transition: all 0.2s var(--ease-out);
+    display: inline-flex; align-items: center; gap: 6px; user-select: none;
+  }
+  .segment-btn:hover { color: var(--text-primary); }
+  .segment-btn.active {
+    background: var(--bg-surface-elevated); color: var(--accent);
+    border: 1px solid var(--border-accent); box-shadow: 0 1px 6px rgba(0,0,0,0.4);
+  }
+  .search-wrapper { position: relative; flex: 1; min-width: 220px; max-width: 320px; }
+  .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; font-size: 12px; }
+  .search-clear-btn {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: transparent; border: none; color: var(--text-muted); cursor: pointer;
+    font-size: 13px; padding: 2px 6px; border-radius: 4px; display: none;
+  }
+  .search-clear-btn:hover { color: var(--text-primary); }
+  .search-input {
+    width: 100%; background: var(--bg-primary); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm); padding: 7px 28px 7px 30px;
+    color: var(--text-primary); font-family: var(--font-body); font-size: 13px; transition: all 0.2s var(--ease-out);
+  }
+  .search-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  .search-input::placeholder { color: var(--text-muted); }
+  
+  .date-filter-group { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); font-family: var(--font-mono); }
+  .date-filter-input {
+    background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+    padding: 5px 8px; color: var(--text-primary); font-family: var(--font-mono); font-size: 12px; color-scheme: dark;
+  }
+  .date-filter-input:focus { outline: none; border-color: var(--accent); }
+
+  /* ---- MAIN CONTENT ---- */
+  .main-content { max-width: 1440px; margin: 18px auto 60px; padding: 0 36px; width: 100%; flex: 1; }
+  .view-panel { display: none; opacity: 0; transform: translateY(8px); transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+  .view-panel.active { display: block; opacity: 1; transform: translateY(0); animation: smoothSlideIn 0.3s var(--ease-out) forwards; }
+  @keyframes smoothSlideIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ---- STATUS PICKER ---- */
+  .status-picker-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+  .status-square-trigger {
+    width: 16px; height: 16px; border-radius: 4px;
+    background: var(--sq-color, var(--accent)); box-shadow: 0 0 10px var(--sq-color, var(--accent));
+    border: 1px solid rgba(255, 255, 255, 0.25); cursor: pointer; padding: 0; display: block;
+    transition: transform 0.2s var(--ease-out), box-shadow 0.2s;
+  }
+  .status-square-trigger:hover { transform: scale(1.3); box-shadow: 0 0 16px var(--sq-color, var(--accent)); }
+  .status-navbar-popup {
+    position: absolute; top: 50%; left: calc(100% + 10px); transform: translateY(-50%) scale(0.9);
+    background: rgba(30, 27, 24, 0.98); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-highlight); border-radius: 20px; padding: 5px 8px;
+    display: none; align-items: center; gap: 8px; z-index: 70;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7); opacity: 0;
+    transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out); white-space: nowrap;
+  }
+  .status-navbar-popup.open { display: inline-flex; opacity: 1; transform: translateY(-50%) scale(1); }
+  
+  /* Status popup positioning inside cards */
+  .project-card-top .status-navbar-popup {
+    left: auto; right: calc(100% + 10px);
+  }
+  .project-card-top .status-navbar-popup.open {
+    transform: translateY(-50%) scale(1);
+  }
+
+  .status-nav-square {
+    width: 14px; height: 14px; border-radius: 3px; background: var(--nav-color);
+    border: 1px solid transparent; cursor: pointer; padding: 0;
+    transition: all 0.18s var(--ease-out); opacity: 0.5;
+  }
+  .status-nav-square:hover { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px var(--nav-color); }
+  .status-nav-square.active { opacity: 1; transform: scale(1.15); border-color: #ffffff; box-shadow: 0 0 12px var(--nav-color); }
+
+  /* ---- TABLE VIEW ---- */
+  .table-wrapper { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); overflow-x: auto; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25); }
+  .data-table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; min-width: 1100px; }
+  .data-table th {
+    background: var(--bg-surface-elevated); color: var(--text-muted); font-family: var(--font-mono); font-size: 11px;
+    text-transform: uppercase; letter-spacing: 0.05em; padding: 12px 14px; border-bottom: 1px solid var(--border-subtle);
+    user-select: none;
+  }
+  .data-table th.sortable { cursor: pointer; transition: color 0.15s; }
+  .data-table th.sortable:hover { color: var(--text-primary); }
+  .data-table th.sorted-asc, .data-table th.sorted-desc { color: var(--accent); }
+  .sort-indicator { display: inline-block; margin-left: 4px; font-size: 10px; color: var(--accent); }
+  
+  .data-table td { padding: 12px 14px; border-bottom: 1px solid var(--border-subtle); color: var(--text-secondary); vertical-align: middle; transition: background-color 0.15s; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table tbody tr:hover td { background: var(--bg-surface-hover); }
+  .table-title { font-family: var(--font-title); font-weight: 600; color: var(--text-primary); font-size: 14px; letter-spacing: 0.01em; }
+  .table-dates { font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+  .table-dates.no-date { color: var(--text-muted); font-style: italic; }
+  .table-mono { font-family: var(--font-mono); }
+
+  /* Payment Progress Mini Bar */
+  .pay-progress-mini { display: flex; flex-direction: column; gap: 4px; min-width: 130px; cursor: pointer; padding: 4px 6px; border-radius: var(--radius-sm); transition: background 0.15s; }
+  .pay-progress-mini:hover { background: rgba(255,255,255,0.06); }
+  .pay-progress-track { height: 5px; background: rgba(255,255,255,0.06); border-radius: 99px; overflow: hidden; }
+  .pay-progress-fill { height: 100%; border-radius: 99px; transition: width 0.5s var(--ease-out); }
+  .pay-progress-label { font-family: var(--font-mono); font-size: 11px; display: flex; justify-content: space-between; align-items: center; }
+
+  /* ---- GRID VIEW ---- */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+  .project-card {
+    background: var(--bg-surface); border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--card-status-color, var(--border-subtle));
+    border-radius: var(--radius-md); padding: 22px;
+    display: flex; flex-direction: column; gap: 15px;
+    transition: all 0.25s var(--ease-out); position: relative; overflow: visible;
+    animation: cardAppear 0.35s var(--ease-out) both;
+  }
+  @keyframes cardAppear { from { opacity: 0; transform: scale(0.97) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+  .project-card:hover { border-color: var(--border-highlight); border-left-color: var(--card-status-color, var(--accent)); background: var(--bg-surface-elevated); transform: translateY(-3px); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45); }
+  .project-card-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; position: relative; }
+  .project-id { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-bottom: 4px; letter-spacing: 0.04em; }
+  .project-title { font-family: var(--font-title); font-size: 18px; font-weight: 700; color: var(--text-primary); line-height: 1.3; }
+  .project-dates { display: flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: var(--accent); }
+  .project-dates.no-date { color: var(--text-muted); font-style: italic; }
+  .project-deliverables { font-size: 13px; color: var(--text-secondary); line-height: 1.45; background: rgba(0,0,0,0.25); border: 1px solid var(--border-subtle); padding: 9px 12px; border-radius: var(--radius-sm); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  
+  .expense-breakdown-card { background: rgba(0,0,0,0.35); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+  .expense-breakdown-title { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none; }
+  .expense-breakdown-title:hover { color: var(--text-secondary); }
+  .expense-chevron { transition: transform 0.2s var(--ease-out); display: inline-block; }
+  .expense-breakdown-title.collapsed .expense-chevron { transform: rotate(-90deg); }
+  .expense-items-list { display: flex; flex-direction: column; gap: 4px; margin-top: 4px; transition: max-height 0.25s var(--ease-out), opacity 0.2s; }
+  .expense-items-list.hidden-exp { display: none; }
+  .expense-item-row { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); }
+  .expense-item-amt { font-family: var(--font-mono); color: var(--text-primary); }
+  
+  .project-finances { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--border-subtle); display: grid; grid-template-columns: 1fr 1fr 1.2fr; gap: 8px; }
+  .fin-label { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.04em; }
+  .fin-value { font-family: var(--font-mono); font-size: 14px; font-weight: 600; color: var(--text-primary); margin-top: 2px; }
+  .fin-value.profit-pos { color: var(--accent); }
+  .fin-value.profit-neg { color: #f87171; }
+  
+  .project-card-bottom { display: flex; justify-content: space-between; align-items: center; padding-top: 4px; }
+  .card-actions { display: flex; gap: 6px; width: 100%; justify-content: flex-end; flex-wrap: wrap; }
+
+  /* ---- STATS VIEW ---- */
+  .stats-container { display: flex; flex-direction: column; gap: 20px; }
+  .stats-header-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 18px 22px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+  .stats-period-title { font-size: 13.5px; font-family: var(--font-mono); color: var(--text-secondary); }
+  .stats-period-title span { color: var(--accent); font-weight: 600; }
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+  .kpi-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 20px; display: flex; flex-direction: column; gap: 8px; transition: transform 0.25s var(--ease-out), border-color 0.25s; }
+  .kpi-card:hover { border-color: var(--border-highlight); transform: translateY(-2px); }
+  .kpi-card.highlight { border-color: var(--border-accent); background: linear-gradient(180deg, rgba(217, 164, 99, 0.06) 0%, var(--bg-surface) 100%); }
+  .kpi-label { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+  .kpi-value { font-family: var(--font-title); font-size: 28px; font-weight: 700; color: var(--text-primary); }
+  .kpi-value.accent { color: var(--accent); }
+  .kpi-sub { font-size: 12px; color: var(--text-secondary); }
+  .breakdown-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .breakdown-card { background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 22px; display: flex; flex-direction: column; gap: 16px; }
+  .breakdown-title { font-family: var(--font-title); font-size: 17px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+  .progress-item { display: flex; flex-direction: column; gap: 6px; }
+  .progress-labels { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 12px; }
+  .progress-track { height: 8px; background: var(--bg-primary); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 99px; transition: width 0.6s var(--ease-out); }
+
+  /* ---- EMPTY STATE ---- */
+  .empty-state { text-align: center; padding: 60px 20px; background: var(--bg-surface); border: 1px dashed var(--border-subtle); border-radius: var(--radius-md); }
+  .empty-icon { width: 48px; height: 48px; margin: 0 auto 16px; border-radius: 50%; background: var(--bg-surface-elevated); display: flex; align-items: center; justify-content: center; color: var(--accent); font-size: 20px; }
+  .empty-title { font-family: var(--font-title); font-size: 19px; font-weight: 600; margin-bottom: 6px; }
+  .empty-desc { font-size: 13px; color: var(--text-secondary); max-width: 400px; margin: 0 auto 18px; }
+
+  /* ---- MODAL BASE ---- */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(14, 12, 10, 0.85);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display: none; align-items: center; justify-content: center; padding: 20px; z-index: 100;
+    opacity: 0; transition: opacity 0.25s var(--ease-out);
+  }
+  .modal-overlay.open { display: flex; opacity: 1; }
+  .modal-container {
+    background: var(--bg-surface); border: 1px solid var(--border-highlight); border-radius: var(--radius-lg);
+    width: 100%; max-width: 580px; max-height: 90vh; overflow-y: auto; padding: 26px;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.75);
+    transform: scale(0.96) translateY(12px); transition: all 0.25s var(--ease-out);
+  }
+  .modal-overlay.open .modal-container { transform: scale(1) translateY(0); }
+  .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle); }
+  .modal-title { font-family: var(--font-title); font-size: 21px; font-weight: 700; }
+  .modal-close { background: transparent; border: none; color: var(--text-secondary); font-size: 20px; cursor: pointer; padding: 4px 8px; line-height: 1; border-radius: 4px; transition: color 0.15s; }
+  .modal-close:hover { color: var(--text-primary); }
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 7px; }
+  .form-control {
+    width: 100%; background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+    padding: 9px 12px; color: var(--text-primary); font-family: var(--font-body); font-size: 13.5px;
+    transition: all 0.2s var(--ease-out);
+  }
+  .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-dim); }
+  textarea.form-control { min-height: 64px; resize: vertical; }
+  .date-range-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .date-field-sub { display: flex; flex-direction: column; gap: 4px; }
+  .date-field-sub span { font-size: 10.5px; font-family: var(--font-mono); color: var(--text-muted); }
+  .date-field-sub input[type=date] { color-scheme: dark; font-family: var(--font-mono); font-size: 13px; }
+  select.form-control { color-scheme: dark; cursor: pointer; }
+
+  /* Expense Builder & Quick Category Chips */
+  .expense-items-builder { display: flex; flex-direction: column; gap: 8px; margin-bottom: 8px; }
+  .expense-builder-row { display: grid; grid-template-columns: 1fr 110px 34px; gap: 8px; align-items: center; animation: fadeIn 0.2s var(--ease-out); }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  .btn-icon-del { background: transparent; border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); color: var(--text-muted); height: 36px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 15px; transition: all 0.15s; }
+  .btn-icon-del:hover { color: #fca5a5; border-color: var(--danger); background: rgba(192, 85, 74, 0.15); }
+  
+  .expense-presets-bar { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .preset-chip {
+    font-family: var(--font-mono); font-size: 10.5px; padding: 3px 8px; border-radius: var(--radius-full);
+    background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-secondary);
+    cursor: pointer; transition: all 0.15s; user-select: none;
+  }
+  .preset-chip:hover { color: var(--accent); border-color: var(--border-accent); background: var(--accent-dim); }
+
+  .profit-display { background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm); padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+  .profit-val { font-family: var(--font-mono); font-size: 16px; font-weight: 700; color: var(--accent); }
+  .status-selector { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+  .status-opt { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 4px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); background: var(--bg-primary); color: var(--text-secondary); cursor: pointer; text-align: center; transition: all 0.15s var(--ease-out); }
+  .status-opt.active[data-status=upcoming] { background: rgba(224,122,95,0.18); color: var(--status-upcoming); border-color: var(--status-upcoming); }
+  .status-opt.active[data-status=ongoing] { background: rgba(77,168,218,0.18); color: var(--status-ongoing); border-color: var(--status-ongoing); }
+  .status-opt.active[data-status=pending] { background: rgba(217,164,99,0.18); color: var(--status-pending); border-color: var(--status-pending); }
+  .status-opt.active[data-status=completed] { background: rgba(104,187,118,0.18); color: var(--status-completed); border-color: var(--status-completed); }
+  .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; padding-top: 14px; border-top: 1px solid var(--border-subtle); }
+
+  /* ==========================================================================
+     LIQUID WATER DROPLET FAB & MORPHING DIALOG SYSTEM
+     ========================================================================== */
+  .fab-dock {
+    position: fixed; bottom: 26px; left: 50%; transform: translateX(-50%);
+    z-index: 85; display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .fab-water-btn {
+    pointer-events: auto;
+    position: relative;
+    padding: 12px 24px;
+    border-radius: var(--radius-full);
+    border: 1px solid rgba(217, 164, 99, 0.5);
+    background: radial-gradient(circle at 50% 0%, #f3c78d 0%, #d9a463 60%, #b9803c 100%);
+    color: #141210;
+    font-family: var(--font-title);
+    font-weight: 800;
+    font-size: 14.5px;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    box-shadow: 0 8px 28px rgba(217, 164, 99, 0.4), 0 0 50px rgba(217, 164, 99, 0.2);
+    transition: transform 0.28s var(--ease-liquid), box-shadow 0.28s, opacity 0.2s;
+    animation: dropletIdleFloat 3.5s ease-in-out infinite alternate;
+    user-select: none;
+  }
+  .fab-water-btn::before {
+    content: ''; position: absolute; inset: 2px;
+    border-radius: var(--radius-full);
+    background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 60%);
+    pointer-events: none;
+  }
+  .fab-water-btn:hover {
+    transform: scale(1.08) translateY(-3px);
+    box-shadow: 0 12px 36px rgba(217, 164, 99, 0.55), 0 0 70px rgba(217, 164, 99, 0.35);
+  }
+  .fab-water-btn:active {
+    transform: scale(0.92) translateY(2px);
+  }
+  .fab-water-btn.hidden-state {
+    transform: scale(0.2) translateY(20px);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  @keyframes dropletIdleFloat {
+    0% { transform: translateY(0) rotate(0deg); border-radius: 30px 30px 26px 26px; }
+    50% { transform: translateY(-4px) rotate(0.5deg); border-radius: 26px 30px 30px 28px; }
+    100% { transform: translateY(-7px) rotate(-0.5deg); border-radius: 30px 26px 28px 30px; }
+  }
+
+  /* Liquid ripple rings */
+  .droplet-splash-ring {
+    position: fixed; border-radius: 50%;
+    border: 2px solid var(--accent);
+    background: radial-gradient(circle, rgba(217, 164, 99, 0.3) 0%, rgba(217, 164, 99, 0) 70%);
+    pointer-events: none; z-index: 92;
+    animation: liquidSplash 0.75s var(--ease-out) forwards;
+  }
+  @keyframes liquidSplash {
+    0% { width: 40px; height: 40px; opacity: 0.9; transform: translate(-50%, -50%) scale(0.5); }
+    50% { opacity: 0.5; }
+    100% { width: 380px; height: 380px; opacity: 0; transform: translate(-50%, -50%) scale(1.6); }
+  }
+
+  /* Droplet modal morph overlay */
+  .droplet-morph-overlay {
+    position: fixed; inset: 0; z-index: 95;
+    background: rgba(14, 12, 10, 0);
+    display: none; align-items: center; justify-content: center;
+    padding: 20px;
+    transition: background 0.4s var(--ease-out), backdrop-filter 0.4s;
+  }
+  .droplet-morph-overlay.open {
+    display: flex; background: rgba(14, 12, 10, 0.86);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  }
+  .droplet-morph-dialog {
+    background: var(--bg-surface); border: 1px solid var(--border-highlight);
+    border-radius: 24px; width: 100%; max-width: 580px;
+    max-height: 90vh; overflow-y: auto; padding: 28px;
+    box-shadow: 0 30px 80px rgba(0, 0, 0, 0.85), 0 0 40px rgba(217, 164, 99, 0.12);
+    transform-origin: center bottom;
+    opacity: 0; transform: translateY(120px) scale(0.3);
+    transition: opacity 0.4s var(--ease-out), transform 0.5s var(--ease-liquid);
+    position: relative;
+  }
+  .droplet-morph-overlay.open .droplet-morph-dialog {
+    opacity: 1; transform: translateY(0) scale(1);
+    animation: dropletExpandBubble 0.55s var(--ease-liquid) forwards;
+  }
+  .droplet-morph-overlay.closing .droplet-morph-dialog {
+    animation: dropletShrinkBubble 0.35s var(--ease-out) forwards;
+  }
+
+  @keyframes dropletExpandBubble {
+    0% {
+      opacity: 0;
+      transform: translateY(140px) scale(0.2);
+      border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+    }
+    45% {
+      opacity: 1;
+      transform: translateY(-12px) scale(1.04, 0.96);
+      border-radius: 28px 28px 20px 20px / 30% 30% 24px 24px;
+    }
+    75% {
+      transform: translateY(4px) scale(0.98, 1.02);
+      border-radius: 24px;
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      border-radius: 24px;
+    }
+  }
+  @keyframes dropletShrinkBubble {
+    0% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      border-radius: 24px;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(140px) scale(0.15);
+      border-radius: 50%;
+    }
+  }
+
+  .droplet-water-sheen {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    border-radius: 24px 24px 0 0;
+  }
+
+  /* ==========================================================================
+     DEDICATED PAYMENT RECORDER MODAL
+     ========================================================================== */
+  .payment-modal-container {
+    max-width: 620px;
+  }
+  .payment-stat-strip {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+    background: rgba(0, 0, 0, 0.3); border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm); padding: 12px 14px; margin-bottom: 16px;
+  }
+
+  /* ---- PAYMENTS HUB (OUTSTANDING PAYMENTS & RECEIVABLES WINDOW) ---- */
+  .payments-modal-overlay {
+    position: fixed; inset: 0; z-index: 100;
+    background: rgba(14, 12, 10, 0.88); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    display: none; align-items: center; justify-content: center; padding: 20px;
+    opacity: 0; transition: opacity 0.3s var(--ease-out);
+  }
+  .payments-modal-overlay.open { display: flex; opacity: 1; }
+  .payments-modal-window {
+    background: var(--bg-surface); border: 1px solid var(--border-highlight);
+    border-radius: var(--radius-lg); width: 100%; max-width: 900px; height: 90vh;
+    display: flex; flex-direction: column; overflow: hidden;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.85);
+    transform: scale(0.95) translateY(14px); transition: all 0.3s var(--ease-out);
+  }
+  .payments-modal-overlay.open .payments-modal-window { transform: scale(1) translateY(0); }
+
+  .payments-window-header {
+    padding: 20px 28px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+    background: var(--bg-surface-elevated); flex-wrap: wrap;
+  }
+  .payments-window-title { font-family: var(--font-title); font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+  .payments-window-body { flex: 1; overflow-y: auto; padding: 22px 28px; display: flex; flex-direction: column; gap: 18px; }
+
+  .payments-kpi-bar {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+  }
+  .pay-kpi-box {
+    background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+    padding: 14px 18px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .pay-kpi-label { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; }
+  .pay-kpi-val { font-family: var(--font-title); font-size: 22px; font-weight: 700; color: var(--text-primary); }
+
+  /* Project Payment Card inside Payments Window */
+  .pay-project-card {
+    background: var(--bg-primary); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);
+    padding: 20px; display: flex; flex-direction: column; gap: 14px;
+    transition: all 0.2s var(--ease-out);
+  }
+  .pay-project-card:hover { border-color: var(--border-highlight); background: rgba(37, 34, 32, 0.95); }
+  .pay-project-card.settled { border-left: 4px solid var(--status-completed); }
+  .pay-project-card.pending { border-left: 4px solid var(--status-pending); }
+
+  .pay-project-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; flex-wrap: wrap; }
+  .pay-project-title { font-family: var(--font-title); font-size: 17px; font-weight: 700; color: var(--text-primary); }
+  .pay-project-meta { font-family: var(--font-mono); font-size: 11.5px; color: var(--text-secondary); margin-top: 2px; }
+
+  .pay-project-figures { display: flex; align-items: center; gap: 18px; text-align: right; }
+  .pay-figure-item { display: flex; flex-direction: column; }
+  .pay-figure-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+  .pay-figure-val { font-family: var(--font-mono); font-size: 15px; font-weight: 700; color: var(--text-primary); }
+
+  /* Payment Records Sub-List */
+  .pay-history-container {
+    background: rgba(0,0,0,0.3); border: 1px solid var(--border-subtle); border-radius: var(--radius-sm);
+    padding: 10px 14px; display: flex; flex-direction: column; gap: 6px;
+  }
+  .pay-history-title { font-family: var(--font-mono); font-size: 10.5px; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; display: flex; justify-content: space-between; }
+  .pay-record-row {
+    display: grid; grid-template-columns: 100px 110px 1fr 100px 28px; gap: 10px; align-items: center;
+    font-size: 12.5px; padding: 6px 8px; background: var(--bg-surface); border-radius: 4px; border: 1px solid rgba(255,255,255,0.03);
+  }
+  .pay-record-row .pr-date { font-family: var(--font-mono); color: var(--accent); }
+  .pay-record-row .pr-method { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; color: var(--text-secondary); }
+  .pay-record-row .pr-note { color: var(--text-muted); font-size: 12px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .pay-record-row .pr-amt { font-family: var(--font-mono); font-weight: 700; color: var(--text-primary); text-align: right; }
+
+  /* Fast inline payment log form */
+  .quick-pay-form {
+    display: grid; grid-template-columns: 120px 130px 130px 1fr auto auto; gap: 8px; align-items: center;
+    background: rgba(217, 164, 99, 0.05); border: 1px dashed var(--border-accent); border-radius: var(--radius-sm);
+    padding: 10px 12px; margin-top: 4px;
+  }
+
+  /* ---- PRINT / INVOICE MODAL ---- */
+  .invoice-modal-container { max-width: 680px; }
+  .invoice-paper {
+    background: #faf9f6; color: #221f1c; padding: 32px; border-radius: 12px;
+    font-family: 'Urbanist', 'Inter', -apple-system, sans-serif;
+    border: 1px solid #ddd7c9;
+  }
+  .invoice-brand { display: flex; justify-content: space-between; border-bottom: 2px solid #ddd7c9; padding-bottom: 16px; margin-bottom: 20px; }
+  .invoice-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 700; color: #221f1c; }
+  .invoice-meta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; font-size: 13px; color: #5a554d; }
+  .invoice-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+  .invoice-table th { background: #ede8dc; color: #3a352f; font-weight: 700; text-align: left; padding: 10px 12px; border-bottom: 1px solid #ddd7c9; }
+  .invoice-table td { padding: 10px 12px; border-bottom: 1px solid #ede8dc; color: #221f1c; }
+  .invoice-totals { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; font-size: 14px; }
+  .invoice-total-row { display: flex; justify-content: space-between; width: 230px; }
+  .invoice-total-row.grand { font-size: 16px; font-weight: 800; border-top: 2px solid #221f1c; padding-top: 8px; color: #221f1c; }
+
+  /* ---- CONFIRM MODAL ---- */
+  .confirm-box { max-width: 440px; }
+  .confirm-msg { font-size: 14px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 20px; }
+
+  /* ---- SHORTCUTS GUIDE MODAL ---- */
+  .shortcuts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .shortcut-row { display: flex; align-items: center; justify-content: space-between; background: var(--bg-primary); padding: 8px 12px; border-radius: 6px; border: 1px solid var(--border-subtle); }
+  .kbd-key { font-family: var(--font-mono); font-size: 11px; background: var(--bg-surface-elevated); border: 1px solid var(--border-highlight); padding: 2px 6px; border-radius: 4px; color: var(--accent); }
+
+  /* ---- TOAST ---- */
+  .toast-container { position: fixed; bottom: 90px; right: 24px; z-index: 200; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+  .toast { background: var(--bg-surface-elevated); border: 1px solid var(--border-highlight); border-left: 3px solid var(--accent); color: var(--text-primary); font-family: var(--font-body); font-size: 13.5px; padding: 12px 18px; border-radius: var(--radius-sm); box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5); opacity: 0; transform: translateY(10px) scale(0.96); transition: all 0.25s var(--ease-out); pointer-events: auto; }
+  .toast.show { opacity: 1; transform: translateY(0) scale(1); }
+  .toast.error { border-left-color: var(--danger); }
+  .toast.success { border-left-color: var(--status-completed); }
+
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+  @media print {
+    body * { visibility: hidden; }
+    #printableInvoiceArea, #printableInvoiceArea * { visibility: visible; }
+    #printableInvoiceArea { position: absolute; left: 0; top: 0; width: 100%; }
+    .no-print { display: none !important; }
+  }
+
+  @media (max-width: 860px) {
+    .header { padding: 12px 20px; }
+    .controls-bar { padding: 0 20px; }
+    .main-content { padding: 0 20px; }
+    .breakdown-section { grid-template-columns: 1fr; }
+    .search-wrapper { max-width: 100%; width: 100%; }
+    .controls-card { flex-direction: column; align-items: stretch; }
+    .date-filter-group { flex-wrap: wrap; }
+    .date-range-grid { grid-template-columns: 1fr; }
+    .status-selector { grid-template-columns: 1fr 1fr; }
+    .payments-kpi-bar { grid-template-columns: 1fr; }
+    .quick-pay-form { grid-template-columns: 1fr 1fr; }
+    .pay-record-row { grid-template-columns: 1fr 1fr; }
+    .payment-stat-strip { grid-template-columns: 1fr; }
+    .shortcuts-grid { grid-template-columns: 1fr; }
+  }
+
+  /* =========================================================================
+     RIGHT FRAME EXPANDING INVOICE STRIP & FLUID PAGE SLIDE
+     ========================================================================= */
+  .right-edge-strip {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    transform: translate3d(calc(100% - 44px), -50%, 0);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    text-decoration: none;
+    background: rgba(28, 26, 23, 0.96);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--border-accent);
+    border-right: none;
+    border-radius: 16px 0 0 16px;
+    box-shadow: -8px 0 35px rgba(0, 0, 0, 0.65), 0 0 25px rgba(217, 164, 99, 0.12);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s, border-color 0.35s;
+    will-change: transform;
+  }
+
+  .right-edge-strip:hover {
+    transform: translate3d(0, -50%, 0);
+    border-color: var(--accent);
+    box-shadow: -12px 10px 45px rgba(0, 0, 0, 0.85), 0 0 35px rgba(217, 164, 99, 0.28);
+  }
+
+  /* Always-visible grip tab */
+  .strip-tab {
+    width: 44px;
+    padding: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+
+  .strip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    animation: pulseStripDot 2s infinite ease-in-out alternate;
+  }
+  @keyframes pulseStripDot {
+    0% { transform: scale(0.85); opacity: 0.7; }
+    100% { transform: scale(1.25); opacity: 1; }
+  }
+
+  .strip-label {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+  }
+  .right-edge-strip:hover .strip-label {
+    color: var(--accent);
+  }
+
+  /* Drawer card body */
+  .strip-drawer-body {
+    width: 220px;
+    padding: 18px 20px 18px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .strip-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .strip-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: radial-gradient(circle at 35% 35%, #f5cf98 0%, #d9a463 60%, #b9803c 100%);
+    color: #141210;
+    font-family: var(--font-brand);
+    font-weight: 800;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 14px var(--accent-glow);
+  }
+  .strip-title {
+    font-family: var(--font-title);
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+  }
+  .strip-desc {
+    font-size: 11px;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  .strip-action-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4px;
+    padding: 7px 12px;
+    background: var(--accent-dim);
+    border: 1px solid var(--border-accent);
+    border-radius: 8px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 700;
+    color: var(--accent);
+    transition: background 0.2s, color 0.2s;
+  }
+  .right-edge-strip:hover .strip-action-chip {
+    background: var(--accent);
+    color: #141210;
+  }
+
+  /* Slide Overlay Curtain */
+  .slide-curtain {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #141210;
+    border-left: 3px solid var(--accent);
+    box-shadow: -20px 0 80px rgba(217, 164, 99, 0.5);
+    transform: translateX(100vw);
+    z-index: 100000;
+    pointer-events: none;
+    transition: transform 0.38s cubic-bezier(0.76, 0, 0.24, 1);
+  }
+  .slide-curtain.active {
+    transform: translateX(0);
+  }
+</style>
+</head>
+<body>  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-mark">
+          <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+        </div>
+        <div>
+          <div class="brand-title">LUMINOSITY</div>
+          <div class="brand-subtitle">Project &amp; Financial Ledger</div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <!-- Unified Import/Export / CSV Button -->
+        <button class="btn btn-sm" id="dataBtn" title="Backup, Export CSV &amp; Restore Data">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Data &amp; CSV
+        </button>
+
+        <!-- Outstanding Payments Button -->
+        <button class="btn btn-sm" id="paymentsOverviewBtn" title="Check all remaining payments and balances">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Remaining Payments
+          <span class="badge-chip" id="headerPendingBadge">₹0</span>
+        </button>
+
+        <!-- Shortcuts Help Button -->
+        <button class="btn btn-sm btn-ghost" id="shortcutsBtn" title="Keyboard Shortcuts (?)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </button>
+
+        <!-- Log Out Button -->
+        <a href="index.html" class="btn btn-sm btn-ghost" title="Log Out of Luminosity" style="color:var(--text-muted);">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log Out
+        </a>
+
+        <!-- Subtle Skull Clear Button -->
+        <button class="btn-skull" id="resetBtn" title="Danger: Reset all data">💀</button>
+      </div>
+    </div>
+    <input type="file" id="fileInput" accept="application/json" class="visually-hidden">
+  </header>
+
+  <!-- =========================================================================
+       RIGHT FRAME HOVER STRIP (SLIDE TO INVOICE GENERATOR)
+       ========================================================================= -->
+  <a href="invoiceGeneratorLuminavFilms.html" class="right-edge-strip" id="rightInvoiceStrip" onclick="window.slideTransitionToInvoice(event)" title="Click to Slide into Invoice Generator">
+    <div class="strip-tab">
+      <div class="strip-dot"></div>
+      <div class="strip-label">
+        <span>INVOICE STUDIO</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <div class="strip-drawer-body">
+      <div class="strip-header">
+        <div class="strip-mark">
+          <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+        </div>
+        <div class="strip-title">Invoice Generator</div>
+      </div>
+      <div class="strip-desc">Client billing, quotations, &amp; GST invoices.</div>
+      <div class="strip-action-chip">
+        <span>Slide to Invoices</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- Slide Curtain Layer -->
+  <div class="slide-curtain" id="slideCurtain"></div>
+
+  <!-- CONTROLS BAR -->
+  <section class="controls-bar">
+    <div class="controls-card">
+      <div class="segmented-group">
+        <button class="segment-btn active" data-view="table">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+          Table
+        </button>
+        <button class="segment-btn" data-view="grid">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Grid
+        </button>
+        <button class="segment-btn" data-view="stats">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          Analytics
+        </button>
+      </div>
+      <div class="segmented-group" id="statusFilterGroup">
+        <button class="segment-btn active" data-filter="all">All</button>
+        <button class="segment-btn" data-filter="upcoming">Upcoming</button>
+        <button class="segment-btn" data-filter="ongoing">Ongoing</button>
+        <button class="segment-btn" data-filter="pending">Pending</button>
+        <button class="segment-btn" data-filter="completed">Completed</button>
+      </div>
+      <div class="date-filter-group">
+        <span>Dates:</span>
+        <input type="date" class="date-filter-input" id="filterStart" title="Filter From Date">
+        <span>→</span>
+        <input type="date" class="date-filter-input" id="filterEnd" title="Filter To Date">
+        <button class="btn btn-sm btn-ghost" id="clearDatesBtn" title="Reset Dates" style="padding:4px 8px;font-size:11px;">Reset</button>
+      </div>
+      <div class="search-wrapper">
+        <span class="search-icon">🔍</span>
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projects, clients, notes… (Press /)">
+        <button type="button" class="search-clear-btn" id="searchClearBtn" title="Clear search">&times;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN VIEWS -->
+  <main class="main-content">
+    <!-- TABLE VIEW -->
+    <div id="tableView" class="view-panel active">
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th style="width:60px;text-align:center;" class="sortable" data-sort="status" title="Sort by Status">Status <span class="sort-indicator"></span></th>
+              <th style="width:60px;" class="sortable" data-sort="id" title="Sort by ID">ID <span class="sort-indicator"></span></th>
+              <th class="sortable" data-sort="title" title="Sort by Title">Client / Project <span class="sort-indicator"></span></th>
+              <th class="sortable" data-sort="date" title="Sort by Date">Dates <span class="sort-indicator"></span></th>
+              <th>Deliverables</th>
+              <th style="width:110px;" class="sortable" data-sort="payment" title="Sort by Agreed Quotation">Quotation <span class="sort-indicator"></span></th>
+              <th style="width:170px;" class="sortable" data-sort="paid" title="Sort by Payment Progress">Payment Progress <span class="sort-indicator"></span></th>
+              <th style="width:105px;" class="sortable" data-sort="expenses" title="Sort by Expenses">Expenses <span class="sort-indicator"></span></th>
+              <th style="width:105px;" class="sortable" data-sort="profit" title="Sort by Net Profit">Net Profit <span class="sort-indicator"></span></th>
+              <th style="width:170px;text-align:right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GRID VIEW -->
+    <div id="gridView" class="view-panel">
+      <div class="projects-grid" id="projectsGrid"></div>
+    </div>
+
+    <!-- STATS VIEW -->
+    <div id="statsView" class="view-panel">
+      <div class="stats-container">
+        <div class="stats-header-card">
+          <div>
+            <div class="brand-title" style="font-size:17px;">Performance Analytics</div>
+            <div class="stats-period-title" id="statsPeriodLabel">Timeframe: <span>All Time</span></div>
+          </div>
+          <div class="segmented-group">
+            <button class="segment-btn active" data-range-preset="all">All Time</button>
+            <button class="segment-btn" data-range-preset="this-month">This Month</button>
+            <button class="segment-btn" data-range-preset="this-year">This Year</button>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card highlight"><div class="kpi-label">Net Profit (Quoted)</div><div class="kpi-value accent" id="kpiNetProfit">₹0</div><div class="kpi-sub" id="kpiMargin">Margin: 0%</div></div>
+          <div class="kpi-card"><div class="kpi-label">Gross Revenue</div><div class="kpi-value" id="kpiRevenue">₹0</div><div class="kpi-sub" id="kpiAvgRevenue">Avg: ₹0</div></div>
+          <div class="kpi-card"><div class="kpi-label">Total Expenses</div><div class="kpi-value" id="kpiExpenses">₹0</div><div class="kpi-sub" id="kpiExpenseRatio">Ratio: 0%</div></div>
+          <div class="kpi-card"><div class="kpi-label">Projects</div><div class="kpi-value" id="kpiTotalProjects">0</div><div class="kpi-sub" id="kpiCompletedProjects">0 Completed</div></div>
+        </div>
+        <div class="breakdown-section">
+          <div class="breakdown-card">
+            <div class="breakdown-title"><span class="brand-mark" style="width:16px;height:16px;font-size:9px;border-radius:4px;display:inline-flex;">₹</span> Status Distribution</div>
+            <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px;">
+              <div class="progress-item"><div class="progress-labels"><span style="color:var(--status-completed);">Completed</span><span id="statCountCompleted" class="table-mono">0</span></div><div class="progress-track"><div class="progress-fill" id="barCompleted" style="background:var(--status-completed);width:0%;"></div></div></div>
+              <div class="progress-item"><div class="progress-labels"><span style="color:var(--status-ongoing);">Ongoing</span><span id="statCountOngoing" class="table-mono">0</span></div><div class="progress-track"><div class="progress-fill" id="barOngoing" style="background:var(--status-ongoing);width:0%;"></div></div></div>
+              <div class="progress-item"><div class="progress-labels"><span style="color:var(--status-pending);">Payment Pending</span><span id="statCountPending" class="table-mono">0</span></div><div class="progress-track"><div class="progress-fill" id="barPending" style="background:var(--status-pending);width:0%;"></div></div></div>
+              <div class="progress-item"><div class="progress-labels"><span style="color:var(--status-upcoming);">Upcoming</span><span id="statCountUpcoming" class="table-mono">0</span></div><div class="progress-track"><div class="progress-fill" id="barUpcoming" style="background:var(--status-upcoming);width:0%;"></div></div></div>
+            </div>
+          </div>
+          <div class="breakdown-card">
+            <div class="breakdown-title"><span class="brand-mark" style="width:16px;height:16px;font-size:9px;border-radius:4px;display:inline-flex;">₹</span> Financial &amp; Cashflow Summary</div>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:4px;">
+              <div style="display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border-subtle);"><span style="color:var(--text-secondary);font-size:13px;">Total Cash Collected</span><span id="statCashCollected" class="table-mono" style="color:var(--status-completed);font-weight:600;">₹0</span></div>
+              <div style="display:flex;justify-content:space-between;padding-bottom:8px;border-bottom:1px solid var(--border-subtle);"><span style="color:var(--text-secondary);font-size:13px;">Pending Receivables</span><span id="statPendingMoney" class="table-mono" style="color:var(--accent);font-weight:600;">₹0</span></div>
+              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-secondary);font-size:13px;">Avg Expense / Project</span><span id="statAvgExpense" class="table-mono" style="color:var(--text-secondary);">₹0</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       BOTTOM CENTER LIQUID WATER DROPLET BUTTON (NEW PROJECT)
+       ========================================================================= -->
+  <div class="fab-dock" id="fabDock">
+    <button class="fab-water-btn" id="fabBtn" title="Create New Project (Press N)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      <span>New Project</span>
+    </button>
+  </div>
+
+  <!-- =========================================================================
+       WATER DROPLET MORPHING DIALOG (NEW / EDIT PROJECT)
+       ========================================================================= -->
+  <div class="droplet-morph-overlay" id="dropletOverlay">
+    <div class="droplet-morph-dialog" id="dropletFormContainer">
+      <div class="droplet-water-sheen"></div>
+      <div class="modal-head">
+        <div class="modal-title" id="modalTitle">New Project</div>
+        <button type="button" class="modal-close" id="modalCloseBtn">&times;</button>
+      </div>
+      <form id="projectForm">
+        <div class="form-group">
+          <label class="form-label" for="titleInput">Project Title / Client</label>
+          <input type="text" class="form-control" id="titleInput" placeholder="e.g. Vogue — Autumn Editorial / Brand Promo Edit" required>
+        </div>
+        <div class="form-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <label class="form-label" style="margin-bottom:0;">Project Dates (Optional for Edit Projects)</label>
+            <button type="button" class="btn btn-xs btn-ghost" id="modalClearDatesBtn" style="font-size:10.5px;color:var(--text-muted);padding:1px 6px;">Clear Dates</button>
+          </div>
+          <div class="date-range-grid">
+            <div class="date-field-sub"><span>Start Date (Optional)</span><input type="date" class="form-control" id="modalStartDate"></div>
+            <div class="date-field-sub"><span>End / Delivery Date (Optional)</span><input type="date" class="form-control" id="modalEndDate"></div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="deliverablesInput">Deliverables &amp; Scope</label>
+          <textarea class="form-control" id="deliverablesInput" placeholder="e.g. Video Editing, Color Grading, 80 Edited Photos, 4 Reels"></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="paymentInput">Agreed Quotation / Total Project Fee (₹)</label>
+          <input type="number" class="form-control" id="paymentInput" min="0" step="0.01" placeholder="0">
+        </div>
+        <div class="form-group">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;">
+            <label class="form-label" style="margin-bottom:0;">Itemized Expenses</label>
+            <span id="modalTotalExpensesLabel" style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);">Total: ₹0</span>
+          </div>
+          <!-- Quick category chips -->
+          <div class="expense-presets-bar">
+            <span class="preset-chip" onclick="window.addPresetExpense('Travel / Fuel')">+ Travel</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('Gear Rental')">+ Gear</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('Studio Rent')">+ Studio</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('Assistant / Crew')">+ Crew</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('MUA / Hair')">+ MUA</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('Editing / Post')">+ Edit</span>
+            <span class="preset-chip" onclick="window.addPresetExpense('Catering / Food')">+ Food</span>
+          </div>
+          <div class="expense-items-builder" id="expenseItemsContainer"></div>
+          <button type="button" class="btn btn-sm btn-ghost" id="addExpenseItemBtn" style="border:1px dashed var(--border-subtle);width:100%;justify-content:center;padding:7px;">+ Add Custom Expense</button>
+        </div>
+        <div class="profit-display">
+          <span class="fin-label">Estimated Net Profit</span>
+          <span class="profit-val" id="modalProfitPreview">₹0</span>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Project Status</label>
+          <div class="status-selector">
+            <button type="button" class="status-opt active" data-status="upcoming">Upcoming</button>
+            <button type="button" class="status-opt" data-status="ongoing">Ongoing</button>
+            <button type="button" class="status-opt" data-status="pending">Pending</button>
+            <button type="button" class="status-opt" data-status="completed">Completed</button>
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-ghost" id="modalCancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="modalSaveBtn">Save Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       DEDICATED PAYMENT LEDGER & TRANSACTION MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="paymentLedgerModalOverlay">
+    <div class="modal-container payment-modal-container" role="dialog">
+      <div class="modal-head">
+        <div>
+          <div class="modal-title" id="payLedgerTitle">Payment Ledger</div>
+          <div style="font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);" id="payLedgerSubtitle">Transaction records and installment tracker</div>
+        </div>
+        <button type="button" class="modal-close" onclick="window.closePaymentLedger()">&times;</button>
+      </div>
+
+      <div class="payment-stat-strip">
+        <div>
+          <div class="fin-label">Agreed Quotation</div>
+          <div class="fin-value" id="payLedgerQuotation">₹0</div>
+        </div>
+        <div>
+          <div class="fin-label">Total Realized</div>
+          <div class="fin-value" style="color:var(--status-completed);" id="payLedgerCollected">₹0</div>
+        </div>
+        <div>
+          <div class="fin-label">Remaining Balance</div>
+          <div class="fin-value" style="color:var(--accent);" id="payLedgerRemaining">₹0</div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:18px;">
+        <div style="display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:11.5px;color:var(--text-secondary);margin-bottom:6px;">
+          <span>Collection Progress</span>
+          <span id="payLedgerProgressPct" style="color:var(--accent);font-weight:700;">0%</span>
+        </div>
+        <div class="progress-track" style="height:7px;background:rgba(255,255,255,0.06);">
+          <div class="progress-fill" id="payLedgerProgressBar" style="width:0%;background:var(--accent);"></div>
+        </div>
+      </div>
+
+      <!-- Payment Log List -->
+      <div style="margin-bottom:18px;">
+        <div class="form-label" style="display:flex;justify-content:space-between;">
+          <span>Transaction Records</span>
+          <span id="payLedgerRecordCount" style="color:var(--text-muted);">0 entries</span>
+        </div>
+        <div class="pay-history-container" id="payLedgerHistoryList" style="max-height:170px;overflow-y:auto;"></div>
+      </div>
+
+      <!-- Add Payment Form -->
+      <div style="background:rgba(255,255,255,0.03);padding:14px;border-radius:var(--radius-sm);border:1px solid var(--border-subtle);display:flex;flex-direction:column;gap:10px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-family:var(--font-mono);font-size:11px;text-transform:uppercase;color:var(--text-secondary);letter-spacing:0.04em;">Log Payment Installment</span>
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn btn-xs btn-ghost" id="payLedgerAdvance50Btn" style="color:var(--accent);">50% Advance</button>
+            <button type="button" class="btn btn-xs btn-ghost" id="payLedgerFillFullBtn" style="color:var(--accent);">Full Balance</button>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <span style="font-size:10.5px;font-family:var(--font-mono);color:var(--text-muted);display:block;margin-bottom:4px;">Amount (₹)</span>
+            <input type="number" class="form-control" id="payLedgerAmtInput" min="0.01" step="0.01" placeholder="0">
+          </div>
+          <div>
+            <span style="font-size:10.5px;font-family:var(--font-mono);color:var(--text-muted);display:block;margin-bottom:4px;">Date Received</span>
+            <input type="date" class="form-control" id="payLedgerDateInput">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:130px 1fr;gap:10px;">
+          <div>
+            <span style="font-size:10.5px;font-family:var(--font-mono);color:var(--text-muted);display:block;margin-bottom:4px;">Method</span>
+            <select class="form-control" id="payLedgerMethodSelect"></select>
+          </div>
+          <div>
+            <span style="font-size:10.5px;font-family:var(--font-mono);color:var(--text-muted);display:block;margin-bottom:4px;">Reference Note / UTR</span>
+            <input type="text" class="form-control" id="payLedgerNoteInput" placeholder="e.g. GPay Advance / IMPS #8129">
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary" id="payLedgerSubmitBtn" style="margin-top:2px;">
+          + Record Payment
+        </button>
+      </div>
+
+      <div class="modal-actions" style="justify-content:space-between;">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm btn-primary" id="payLedgerGenOfficialInvoiceBtn" title="Transfer project to Invoice Generator">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Official Invoice ↗
+          </button>
+          <button type="button" class="btn btn-sm btn-ghost" id="payLedgerPrintBtn" style="color:var(--text-secondary);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+            Quick Summary
+          </button>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn btn-ghost" onclick="window.closePaymentLedger()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       OUTSTANDING PAYMENTS & RECEIVABLES WINDOW
+       ========================================================================= -->
+  <div class="payments-modal-overlay" id="paymentsModalOverlay">
+    <div class="payments-modal-window">
+      <div class="payments-window-header">
+        <div>
+          <div class="payments-window-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--accent);"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            Remaining Payments &amp; Accounts
+          </div>
+          <div style="font-size:12px;color:var(--text-secondary);font-family:var(--font-mono);margin-top:2px;">Track receivables, log partial installments, or settle balances across all projects.</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <input type="text" class="form-control" id="winSearchInput" placeholder="Search clients…" style="width:160px;font-size:12px;padding:5px 9px;">
+          <div class="segmented-group" id="payWindowFilterGroup">
+            <button class="segment-btn active" data-pfilter="pending">Pending Only</button>
+            <button class="segment-btn" data-pfilter="all">All Projects</button>
+            <button class="segment-btn" data-pfilter="settled">Settled</button>
+          </div>
+          <button class="modal-close" onclick="window.closePaymentsModal()">&times;</button>
+        </div>
+      </div>
+      <div class="payments-window-body">
+        <div class="payments-kpi-bar">
+          <div class="pay-kpi-box">
+            <div class="pay-kpi-label">Outstanding Receivables</div>
+            <div class="pay-kpi-val" id="winKpiPending" style="color:var(--status-pending);">₹0</div>
+          </div>
+          <div class="pay-kpi-box">
+            <div class="pay-kpi-label">Total Realized Inflow</div>
+            <div class="pay-kpi-val" id="winKpiCollected" style="color:var(--status-completed);">₹0</div>
+          </div>
+          <div class="pay-kpi-box">
+            <div class="pay-kpi-label">Pending Projects</div>
+            <div class="pay-kpi-val" id="winKpiCount">0 projects</div>
+          </div>
+        </div>
+
+        <div id="paymentsListContainer" style="display:flex;flex-direction:column;gap:16px;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       PRINTABLE PROJECT SUMMARY & INVOICE PREVIEW MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="invoiceModalOverlay">
+    <div class="modal-container invoice-modal-container" role="dialog">
+      <div class="modal-head no-print">
+        <div class="modal-title">Project Financial Summary</div>
+        <button type="button" class="modal-close" onclick="window.closeInvoiceModal()">&times;</button>
+      </div>
+      <div id="printableInvoiceArea" class="invoice-paper">
+        <div class="invoice-brand">
+          <div>
+            <div class="invoice-title" id="invDocTitle">PROJECT INVOICE / LEDGER</div>
+            <div style="font-size:12px;color:#7a7568;margin-top:2px;">Studio Production &amp; Accounts</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:13px;font-weight:700;color:#221f1c;" id="invProjectSeq">PROJECT #001</div>
+            <div style="font-size:12px;color:#7a7568;" id="invDateGenerated">24 Aug 2026</div>
+          </div>
+        </div>
+
+        <div class="invoice-meta-grid">
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;color:#7a7568;font-weight:700;">Client / Project</div>
+            <div style="font-size:15px;font-weight:700;color:#221f1c;margin-top:2px;" id="invClientTitle">—</div>
+          </div>
+          <div>
+            <div style="font-size:11px;text-transform:uppercase;color:#7a7568;font-weight:700;">Schedule / Timeline</div>
+            <div style="font-size:14px;color:#3a352f;margin-top:2px;" id="invProjectDates">—</div>
+          </div>
+          <div style="grid-column: 1/-1;">
+            <div style="font-size:11px;text-transform:uppercase;color:#7a7568;font-weight:700;">Deliverables &amp; Scope</div>
+            <div style="font-size:13px;color:#3a352f;margin-top:2px;" id="invDeliverables">—</div>
+          </div>
+        </div>
+
+        <table class="invoice-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th style="text-align:right;width:120px;">Amount</th>
+            </tr>
+          </thead>
+          <tbody id="invTableBody"></tbody>
+        </table>
+
+        <div class="invoice-totals">
+          <div class="invoice-total-row"><span>Agreed Project Quotation:</span><strong id="invTotalQuoted">₹0</strong></div>
+          <div class="invoice-total-row"><span>Itemized Expenses:</span><strong id="invTotalExpenses">₹0</strong></div>
+          <div class="invoice-total-row"><span>Net Studio Profit:</span><strong id="invNetProfit" style="color:#2f855a;">₹0</strong></div>
+          <div class="invoice-total-row" style="border-top:1px solid #ddd7c9;padding-top:6px;"><span>Total Cash Collected:</span><strong id="invTotalCollected" style="color:#2f855a;">₹0</strong></div>
+          <div class="invoice-total-row grand"><span>Remaining Balance:</span><span id="invBalanceDue">₹0</span></div>
+        </div>
+      </div>
+      <div class="modal-actions no-print">
+        <button type="button" class="btn btn-ghost" onclick="window.closeInvoiceModal()">Close</button>
+        <button type="button" class="btn btn-primary" id="invModalOfficialBtn" onclick="window.openCurrentInInvoiceGenerator()">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Open in Invoice Generator ↗
+        </button>
+        <button type="button" class="btn btn-ghost" onclick="window.print()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg> Print</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       DATA IMPORT / EXPORT & CSV MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="dataModalOverlay">
+    <div class="modal-container" role="dialog">
+      <div class="modal-head">
+        <div class="modal-title">Studio Data &amp; Export Center</div>
+        <button type="button" class="modal-close" onclick="window.closeAllModals()">&times;</button>
+      </div>
+      <p style="color:var(--text-secondary);font-size:13.5px;margin-bottom:20px;line-height:1.6;">
+        Export your complete studio database (projects, itemized expenses, transaction records, and invoice database) to a unified JSON backup, or export a CSV spreadsheet (Excel / Google Sheets).
+      </p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <button class="btn btn-primary" id="exportBtn" style="padding:12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          Export JSON
+        </button>
+        <button class="btn btn-success" id="exportCsvBtn" style="padding:12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          Export CSV (Excel)
+        </button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr;gap:12px;">
+        <button class="btn" id="importBtn" style="padding:12px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="15"/></svg>
+          Import JSON Backup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       KEYBOARD SHORTCUTS MODAL
+       ========================================================================= -->
+  <div class="modal-overlay" id="shortcutsModalOverlay">
+    <div class="modal-container" role="dialog" style="max-width:480px;">
+      <div class="modal-head">
+        <div class="modal-title">Keyboard Shortcuts</div>
+        <button type="button" class="modal-close" onclick="window.closeAllModals()">&times;</button>
+      </div>
+      <div class="shortcuts-grid">
+        <div class="shortcut-row"><span>New Project</span><span class="kbd-key">N</span></div>
+        <div class="shortcut-row"><span>Search Projects</span><span class="kbd-key">/</span></div>
+        <div class="shortcut-row"><span>Table View</span><span class="kbd-key">1</span></div>
+        <div class="shortcut-row"><span>Grid View</span><span class="kbd-key">2</span></div>
+        <div class="shortcut-row"><span>Analytics View</span><span class="kbd-key">3</span></div>
+        <div class="shortcut-row"><span>Close Dialogs</span><span class="kbd-key">Esc</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="confirmModalOverlay">
+    <div class="modal-container confirm-box" role="dialog">
+      <div class="modal-head"><div class="modal-title" id="confirmTitle">Confirm</div></div>
+      <div class="confirm-msg" id="confirmMessage"></div>
+      <div class="modal-actions" id="confirmButtons"></div>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+<script>
+(function() {
+  "use strict";
+
+  const STORAGE_KEY = 'projects-data';
+  const LEGACY_KEY = 'shoots-data';
+  const STATUS = {
+    upcoming:  { label: 'Upcoming',        color: '#e07a5f' },
+    ongoing:   { label: 'Ongoing',         color: '#4da8da' },
+    pending:   { label: 'Payment Pending', color: '#d9a463' },
+    completed: { label: 'Completed',       color: '#68bb76' }
+  };
+  const PAYMENT_METHODS = ['UPI', 'Cash', 'Bank Transfer', 'NEFT / RTGS', 'Cheque', 'Card', 'Other'];
+
+  let projects = [];
+  let currentView = 'table';
+  let currentFilter = 'all';
+  let searchQuery = '';
+  let editingId = null;
+  let activePaymentProjectId = null;
+  let activeInvoiceProjectId = null;
+  let payWindowFilter = 'pending';
+  let payWindowSearch = '';
+  
+  // Table Sorting state
+  let sortColumn = 'date';
+  let sortDirection = 'asc'; // 'asc' | 'desc'
+
+  const $ = (sel, el) => (el || document).querySelector(sel);
+  const $$ = (sel, el) => Array.from((el || document).querySelectorAll(sel));
+
+  // DOM elements
+  const projectsGrid = $('#projectsGrid');
+  const tableBody = $('#tableBody');
+  const searchInput = $('#searchInput');
+  const searchClearBtn = $('#searchClearBtn');
+  const filterStart = $('#filterStart');
+  const filterEnd = $('#filterEnd');
+  const headerPendingBadge = $('#headerPendingBadge');
+
+  const fabBtn = $('#fabBtn');
+  const dropletOverlay = $('#dropletOverlay');
+  const projectForm = $('#projectForm');
+  const modalTitle = $('#modalTitle');
+  const titleInput = $('#titleInput');
+  const deliverablesInput = $('#deliverablesInput');
+  const paymentInput = $('#paymentInput');
+  const modalStartDate = $('#modalStartDate');
+  const modalEndDate = $('#modalEndDate');
+  const modalClearDatesBtn = $('#modalClearDatesBtn');
+  const modalProfitPreview = $('#modalProfitPreview');
+  const modalTotalExpensesLabel = $('#modalTotalExpensesLabel');
+  const expenseItemsContainer = $('#expenseItemsContainer');
+
+  const paymentLedgerModalOverlay = $('#paymentLedgerModalOverlay');
+  const dataModalOverlay = $('#dataModalOverlay');
+  const paymentsModalOverlay = $('#paymentsModalOverlay');
+  const paymentsListContainer = $('#paymentsListContainer');
+  const invoiceModalOverlay = $('#invoiceModalOverlay');
+  const shortcutsModalOverlay = $('#shortcutsModalOverlay');
+  const winSearchInput = $('#winSearchInput');
+  const confirmModalOverlay = $('#confirmModalOverlay');
+  const confirmTitle = $('#confirmTitle');
+  const confirmMessage = $('#confirmMessage');
+  const confirmButtons = $('#confirmButtons');
+
+  const fileInput = $('#fileInput');
+  const toastContainer = $('#toastContainer');
+
+  function uid() { return 'prj_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+  function payUid() { return 'py_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+  function escapeHTML(str) {
+    return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  }
+  function fmtMoney(n) {
+    const v = Number(n)||0;
+    const isWhole = (v % 1 === 0);
+    const formatted = isWhole ? Math.abs(Math.round(v)).toLocaleString('en-IN') : Math.abs(v).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    return (v < 0 ? '-' : '') + '₹' + formatted;
+  }
+  function fmtDateSingle(d) {
+    if (!d) return '';
+    const p = String(d).split('-');
+    if (p.length === 3) {
+      const mo = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const m = parseInt(p[1], 10) - 1;
+      if (m >= 0 && m < 12) return `${p[2].padStart(2, '0')} ${mo[m]} ${p[0]}`;
+    }
+    return d;
+  }
+  function fmtDateRange(s, e) {
+    if (!s && !e) return 'No Date Set';
+    if (s && (!e || e === s)) return fmtDateSingle(s);
+    if (!s && e) return 'Until ' + fmtDateSingle(e);
+    return fmtDateSingle(s) + ' → ' + fmtDateSingle(e);
+  }
+
+  function getProjectExpensesTotal(p) {
+    if (Array.isArray(p.expenseItems) && p.expenseItems.length > 0) {
+      return p.expenseItems.reduce((a, i) => a + (parseFloat(i.amount) || 0), 0);
+    }
+    return parseFloat(p.expenses) || 0;
+  }
+
+  function getProjectDates(p) {
+    let start = p.startDate || '', end = p.endDate || '';
+    if (!start && Array.isArray(p.dates) && p.dates.length > 0) {
+      const sorted = p.dates.filter(Boolean).sort();
+      start = sorted[0] || '';
+      end = sorted.length > 1 ? sorted[sorted.length - 1] : start;
+    }
+    return { start, end: end || start };
+  }
+
+  function getProjectPaidTotal(p) {
+    if (!Array.isArray(p.paymentRecords)) return 0;
+    return p.paymentRecords.reduce((a, r) => a + (parseFloat(r.amount) || 0), 0);
+  }
+
+  function getProjectRemaining(p) {
+    return Math.max(0, (Number(p.payment) || 0) - getProjectPaidTotal(p));
+  }
+
+  // Storage
+  async function loadProjects() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY) || localStorage.getItem(LEGACY_KEY);
+      projects = JSON.parse(saved) || [];
+      projects.forEach(p => {
+        if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+        if (!Array.isArray(p.expenseItems) && Number(p.expenses) > 0) {
+          p.expenseItems = [{ title: 'General Expenses', amount: Number(p.expenses) }];
+        }
+      });
+    } catch(e) {
+      projects = [];
+    }
+  }
+
+  async function saveProjects() {
+    try {
+      const json = JSON.stringify(projects);
+      localStorage.setItem(STORAGE_KEY, json);
+      localStorage.setItem(LEGACY_KEY, json);
+      return true;
+    } catch(e) {
+      showToast('Local storage save failed', 'error');
+      return false;
+    }
+  }
+
+  function showToast(msg, type = 'normal') {
+    const t = document.createElement('div');
+    t.className = 'toast' + (type === 'error' ? ' error' : (type === 'success' ? ' success' : ''));
+    t.textContent = msg;
+    toastContainer.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+    setTimeout(() => {
+      t.classList.remove('show');
+      setTimeout(() => t.remove(), 260);
+    }, 3200);
+  }
+
+  function getFilteredProjects() {
+    let list = projects.slice();
+    if (currentFilter !== 'all') list = list.filter(p => p.status === currentFilter);
+    const q = searchQuery.trim().toLowerCase();
+    if (q) {
+      list = list.filter(p => {
+        const titleMatch = (p.title || '').toLowerCase().includes(q);
+        const deliverMatch = (p.deliverables || '').toLowerCase().includes(q);
+        const statusMatch = (STATUS[p.status]?.label || '').toLowerCase().includes(q) || (p.status || '').toLowerCase().includes(q);
+        const payMatch = Array.isArray(p.paymentRecords) && p.paymentRecords.some(r => 
+          (r.note || '').toLowerCase().includes(q) || 
+          (r.method || '').toLowerCase().includes(q) ||
+          String(r.amount).includes(q)
+        );
+        const expMatch = Array.isArray(p.expenseItems) && p.expenseItems.some(i => 
+          (i.title || '').toLowerCase().includes(q) || 
+          String(i.amount).includes(q)
+        );
+        return titleMatch || deliverMatch || statusMatch || payMatch || expMatch;
+      });
+    }
+    const fS = filterStart.value, fE = filterEnd.value;
+    if (fS || fE) {
+      list = list.filter(p => {
+        const { start, end } = getProjectDates(p);
+        if (!start && !end) return false;
+        const sD = start || end, eD = end || start;
+        if (fS && eD < fS) return false;
+        if (fE && sD > fE) return false;
+        return true;
+      });
+    }
+
+    // Dynamic Column Sorting
+    list.sort((a, b) => {
+      let valA, valB;
+      const da = getProjectDates(a).start, db = getProjectDates(b).start;
+      const pa = Number(a.payment) || 0, pb = Number(b.payment) || 0;
+      const ea = getProjectExpensesTotal(a), eb = getProjectExpensesTotal(b);
+      const paidA = getProjectPaidTotal(a), paidB = getProjectPaidTotal(b);
+      const profitA = pa - ea, profitB = pb - eb;
+
+      switch(sortColumn) {
+        case 'id':
+          valA = a.createdAt || 0;
+          valB = b.createdAt || 0;
+          break;
+        case 'title':
+          return sortDirection === 'asc' ? (a.title || '').localeCompare(b.title || '') : (b.title || '').localeCompare(a.title || '');
+        case 'date':
+          if (da && db) return sortDirection === 'asc' ? da.localeCompare(db) : db.localeCompare(da);
+          if (da && !db) return sortDirection === 'asc' ? -1 : 1;
+          if (!da && db) return sortDirection === 'asc' ? 1 : -1;
+          return sortDirection === 'asc' ? (a.createdAt || 0) - (b.createdAt || 0) : (b.createdAt || 0) - (a.createdAt || 0);
+        case 'payment':
+          valA = pa; valB = pb;
+          break;
+        case 'paid':
+          valA = paidA; valB = paidB;
+          break;
+        case 'expenses':
+          valA = ea; valB = eb;
+          break;
+        case 'profit':
+          valA = profitA; valB = profitB;
+          break;
+        case 'status':
+          const order = { upcoming: 1, ongoing: 2, pending: 3, completed: 4 };
+          valA = order[a.status] || 0; valB = order[b.status] || 0;
+          break;
+        default:
+          if (da && db) return da.localeCompare(db);
+          return (b.createdAt || 0) - (a.createdAt || 0);
+      }
+
+      if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+      if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+      return 0;
+    });
+
+    return list;
+  }
+
+  function renderStatusPickerHTML(p, st, cid) {
+    return `<div class="status-picker-wrapper">
+      <button type="button" class="status-square-trigger" onclick="window.toggleStatusNavbar(event,'${cid}')" title="Status: ${st.label}" style="--sq-color:${st.color};"></button>
+      <div class="status-navbar-popup" id="statusNav_${cid}">
+        <button type="button" class="status-nav-square ${p.status==='upcoming'?'active':''}" style="--nav-color:var(--status-upcoming);" title="Upcoming" onclick="window.updateProjectStatus('${p.id}','upcoming')"></button>
+        <button type="button" class="status-nav-square ${p.status==='ongoing'?'active':''}" style="--nav-color:var(--status-ongoing);" title="Ongoing" onclick="window.updateProjectStatus('${p.id}','ongoing')"></button>
+        <button type="button" class="status-nav-square ${p.status==='pending'?'active':''}" style="--nav-color:var(--status-pending);" title="Payment Pending" onclick="window.updateProjectStatus('${p.id}','pending')"></button>
+        <button type="button" class="status-nav-square ${p.status==='completed'?'active':''}" style="--nav-color:var(--status-completed);" title="Completed" onclick="window.updateProjectStatus('${p.id}','completed')"></button>
+      </div>
+    </div>`;
+  }
+
+  // ---- TABLE VIEW RENDER ----
+  function renderTable(list) {
+    $$('.data-table th.sortable').forEach(th => {
+      th.classList.remove('sorted-asc', 'sorted-desc');
+      const ind = th.querySelector('.sort-indicator');
+      if (ind) ind.textContent = '';
+      if (th.dataset.sort === sortColumn) {
+        th.classList.add(sortDirection === 'asc' ? 'sorted-asc' : 'sorted-desc');
+        if (ind) ind.textContent = sortDirection === 'asc' ? '▲' : '▼';
+      }
+    });
+
+    if (!list.length) {
+      tableBody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:48px;color:var(--text-muted);">No projects found matching your filters.</td></tr>`;
+      return;
+    }
+    tableBody.innerHTML = list.map((p, idx) => {
+      const payment = Number(p.payment) || 0, expenses = getProjectExpensesTotal(p), profit = payment - expenses;
+      const profitClass = profit > 0 ? 'profit-pos' : (profit < 0 ? 'profit-neg' : '');
+      const st = STATUS[p.status] || STATUS.upcoming, seq = String(idx + 1).padStart(3, '0');
+      const { start, end } = getProjectDates(p);
+      const hasDate = Boolean(start || end);
+      const paid = getProjectPaidTotal(p);
+      const paidPct = payment > 0 ? Math.min(100, Math.round(paid / payment * 100)) : (paid > 0 ? 100 : 0);
+      const paidColor = paidPct >= 100 ? 'var(--status-completed)' : (paidPct > 0 ? 'var(--accent)' : 'var(--text-muted)');
+      const remaining = Math.max(0, payment - paid);
+
+      return `<tr>
+        <td style="text-align:center;">${renderStatusPickerHTML(p, st, 'tbl_' + p.id)}</td>
+        <td class="table-mono" style="color:var(--text-muted);">#${seq}</td>
+        <td><div class="table-title">${escapeHTML(p.title)}</div></td>
+        <td class="table-dates ${hasDate ? '' : 'no-date'}">${fmtDateRange(start, end)}</td>
+        <td style="max-width:180px;color:var(--text-secondary);font-size:12px;">${escapeHTML(p.deliverables || '—')}</td>
+        <td class="table-mono" style="font-weight:600;">${fmtMoney(payment)}</td>
+        <td>
+          <div class="pay-progress-mini" onclick="window.openPaymentRecorder('${p.id}')" title="Click to view &amp; record payments">
+            <div class="pay-progress-label">
+              <span style="color:${paidColor};font-weight:600;">${fmtMoney(paid)}</span>
+              <span style="color:var(--text-muted);font-size:10px;">${paidPct}%</span>
+            </div>
+            <div class="pay-progress-track">
+              <div class="pay-progress-fill" style="width:${paidPct}%;background:${paidColor};"></div>
+            </div>
+            ${remaining > 0 ? `<div style="font-size:10px;color:var(--status-pending);font-family:var(--font-mono);">${fmtMoney(remaining)} due</div>` : `<div style="font-size:10px;color:var(--status-completed);font-family:var(--font-mono);">Settled ✓</div>`}
+          </div>
+        </td>
+        <td class="table-mono">${fmtMoney(expenses)}</td>
+        <td class="table-mono ${profitClass}">${fmtMoney(profit)}</td>
+        <td style="text-align:right;white-space:nowrap;">
+          <button class="btn btn-sm btn-ghost" style="padding:4px 7px;font-size:11px;" onclick="window.openInInvoiceGenerator('${p.id}')" title="Generate Official Invoice">📄 Inv ↗</button>
+          <button class="btn btn-sm btn-ghost" style="padding:4px 7px;font-size:11px;" onclick="window.openPaymentRecorder('${p.id}')" title="Record Payment">💳 Pay</button>
+          <button class="btn btn-sm btn-ghost" style="padding:4px 7px;font-size:11px;" onclick="window.duplicateProject('${p.id}')" title="Duplicate Project">📋</button>
+          <button class="btn btn-sm btn-ghost" style="padding:4px 7px;font-size:11px;" onclick="window.openEditProject('${p.id}')">Edit</button>
+          <button class="btn btn-sm btn-ghost btn-danger" style="padding:4px 6px;" onclick="window.confirmDeleteProject('${p.id}')">✕</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ---- GRID VIEW RENDER ----
+  function renderGrid(list) {
+    if (!list.length) {
+      projectsGrid.innerHTML = `<div class="empty-state" style="grid-column:1/-1;">
+        <div class="empty-icon">📁</div>
+        <div class="empty-title">${projects.length ? 'No matching projects' : 'No projects logged yet'}</div>
+        <div class="empty-desc">${projects.length ? 'Try adjusting your search query or filters.' : 'Click the "New Project" droplet button below to add your first project or edit job.'}</div>
+      </div>`;
+      return;
+    }
+    projectsGrid.innerHTML = list.map((p, idx) => {
+      const payment = Number(p.payment) || 0, expenses = getProjectExpensesTotal(p), profit = payment - expenses;
+      const profitClass = profit > 0 ? 'profit-pos' : (profit < 0 ? 'profit-neg' : '');
+      const st = STATUS[p.status] || STATUS.upcoming, seq = String(idx + 1).padStart(3, '0');
+      const { start, end } = getProjectDates(p);
+      const hasDate = Boolean(start || end);
+      const paid = getProjectPaidTotal(p);
+      const paidPct = payment > 0 ? Math.min(100, Math.round(paid / payment * 100)) : 0;
+      const remaining = Math.max(0, payment - paid);
+      const hasExp = Array.isArray(p.expenseItems) && p.expenseItems.length > 0;
+
+      return `<div class="project-card" style="--card-status-color:${st.color};">
+        <div class="project-card-top">
+          <div>
+            <div class="project-id">PROJECT #${seq}</div>
+            <div class="project-title">${escapeHTML(p.title)}</div>
+          </div>
+          ${renderStatusPickerHTML(p, st, 'grd_' + p.id)}
+        </div>
+        <div class="project-dates ${hasDate ? '' : 'no-date'}">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>${fmtDateRange(start, end)}</span>
+        </div>
+        ${p.deliverables ? `<div class="project-deliverables">${escapeHTML(p.deliverables)}</div>` : ''}
+        ${hasExp ? `
+          <div class="expense-breakdown-card">
+            <div class="expense-breakdown-title" onclick="window.toggleExpenseAccordion(this)">
+              <span>Expenses (${p.expenseItems.length})</span><span class="expense-chevron">▾</span>
+            </div>
+            <div class="expense-items-list">
+              ${p.expenseItems.map(i => `<div class="expense-item-row"><span>${escapeHTML(i.title || 'Expense')}</span><span class="expense-item-amt">${fmtMoney(i.amount)}</span></div>`).join('')}
+            </div>
+          </div>` : (expenses > 0 ? `
+          <div class="expense-breakdown-card">
+            <div class="expense-item-row"><span>General Expenses</span><span class="expense-item-amt">${fmtMoney(expenses)}</span></div>
+          </div>` : '')}
+        
+        <!-- Payment Bar -->
+        <div class="pay-progress-mini" onclick="window.openPaymentRecorder('${p.id}')" style="margin-top:4px;">
+          <div class="pay-progress-label">
+            <span>Collected: <strong style="color:${paidPct>=100?'var(--status-completed)':'var(--accent)'};">${fmtMoney(paid)}</strong> / ${fmtMoney(payment)}</span>
+            <span style="color:var(--text-muted);">${paidPct}%</span>
+          </div>
+          <div class="pay-progress-track">
+            <div class="pay-progress-fill" style="width:${paidPct}%;background:${paidPct>=100?'var(--status-completed)':'var(--accent)'};"></div>
+          </div>
+          <div style="font-size:10.5px;color:${remaining>0?'var(--status-pending)' : 'var(--status-completed)'};font-family:var(--font-mono);display:flex;justify-content:space-between;">
+            <span>${remaining > 0 ? `${fmtMoney(remaining)} Remaining` : 'Fully Settled ✓'}</span>
+            <span style="text-decoration:underline;cursor:pointer;">Manage Payments 💳</span>
+          </div>
+        </div>
+
+        <div class="project-finances">
+          <div><div class="fin-label">Quotation</div><div class="fin-value">${fmtMoney(payment)}</div></div>
+          <div><div class="fin-label">Expenses</div><div class="fin-value">${fmtMoney(expenses)}</div></div>
+          <div><div class="fin-label">Net Profit</div><div class="fin-value ${profitClass}">${fmtMoney(profit)}</div></div>
+        </div>
+
+        <div class="project-card-bottom">
+          <div class="card-actions">
+            <button class="btn btn-sm btn-ghost" onclick="window.openInInvoiceGenerator('${p.id}')">📄 Official Inv ↗</button>
+            <button class="btn btn-sm btn-ghost" onclick="window.openPaymentRecorder('${p.id}')">💳 Pay</button>
+            <button class="btn btn-sm btn-ghost" onclick="window.duplicateProject('${p.id}')" title="Duplicate Project">📋 Clone</button>
+            <button class="btn btn-sm btn-ghost" onclick="window.openEditProject('${p.id}')">Edit</button>
+            <button class="btn btn-sm btn-ghost btn-danger" onclick="window.confirmDeleteProject('${p.id}')">Del</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  window.toggleExpenseAccordion = function(titleEl) {
+    titleEl.classList.toggle('collapsed');
+    const list = titleEl.nextElementSibling;
+    if (list) list.classList.toggle('hidden-exp');
+  };
+
+  // ---- STATS VIEW RENDER ----
+  function renderStats(list) {
+    let rev = 0, exp = 0, cU = 0, cO = 0, cP = 0, cC = 0, totalPaidInflow = 0, pendingMoney = 0;
+    list.forEach(p => {
+      const pay = Number(p.payment) || 0, e = getProjectExpensesTotal(p), paid = getProjectPaidTotal(p);
+      rev += pay;
+      exp += e;
+      totalPaidInflow += paid;
+      if (pay > paid) pendingMoney += (pay - paid);
+
+      if (p.status === 'upcoming') cU++;
+      if (p.status === 'ongoing') cO++;
+      if (p.status === 'pending') cP++;
+      if (p.status === 'completed') cC++;
+    });
+
+    const net = rev - exp, margin = rev > 0 ? Math.round(net / rev * 100) : 0, eRatio = rev > 0 ? Math.round(exp / rev * 100) : 0;
+    $('#kpiNetProfit').textContent = fmtMoney(net);
+    $('#kpiMargin').textContent = 'Margin: ' + margin + '%';
+    $('#kpiRevenue').textContent = fmtMoney(rev);
+    $('#kpiAvgRevenue').textContent = 'Avg: ' + fmtMoney(list.length ? rev / list.length : 0);
+    $('#kpiExpenses').textContent = fmtMoney(exp);
+    $('#kpiExpenseRatio').textContent = 'Ratio: ' + eRatio + '%';
+    $('#kpiTotalProjects').textContent = list.length;
+    $('#kpiCompletedProjects').textContent = cC + ' Completed';
+
+    const t = list.length || 1;
+    ['Completed', 'Ongoing', 'Pending', 'Upcoming'].forEach((lbl, i) => {
+      const c = [cC, cO, cP, cU][i], pct = Math.round(c / t * 100);
+      $(`#statCount${lbl}`).textContent = c + ' (' + pct + '%)';
+      $(`#bar${lbl}`).style.width = pct + '%';
+    });
+
+    $('#statCashCollected').textContent = fmtMoney(totalPaidInflow);
+    $('#statPendingMoney').textContent = fmtMoney(Math.max(0, pendingMoney));
+    $('#statAvgExpense').textContent = fmtMoney(list.length ? exp / list.length : 0);
+
+    const s = filterStart.value, e = filterEnd.value;
+    if (s && e) $('#statsPeriodLabel').innerHTML = 'Timeframe: <span>' + fmtDateSingle(s) + ' — ' + fmtDateSingle(e) + '</span>';
+    else if (s) $('#statsPeriodLabel').innerHTML = 'Timeframe: <span>From ' + fmtDateSingle(s) + '</span>';
+    else if (e) $('#statsPeriodLabel').innerHTML = 'Timeframe: <span>Up to ' + fmtDateSingle(e) + '</span>';
+    else $('#statsPeriodLabel').innerHTML = 'Timeframe: <span>All Time</span>';
+  }
+
+  function updateHeaderBadge() {
+    let totalPending = 0;
+    projects.forEach(p => {
+      const pay = Number(p.payment) || 0, paid = getProjectPaidTotal(p);
+      if (pay > paid) totalPending += (pay - paid);
+    });
+    headerPendingBadge.textContent = fmtMoney(totalPending);
+    headerPendingBadge.className = 'badge-chip' + (totalPending > 0 ? '' : ' success');
+  }
+
+  function renderAll() {
+    const list = getFilteredProjects();
+    renderTable(list);
+    renderGrid(list);
+    renderStats(list);
+    updateHeaderBadge();
+
+    $$('#statusFilterGroup .segment-btn').forEach(b => b.classList.toggle('active', b.dataset.filter === currentFilter));
+    $$('.controls-card .segmented-group:first-child .segment-btn').forEach(b => b.classList.toggle('active', b.dataset.view === currentView));
+    $$('.view-panel').forEach(p => p.classList.remove('active'));
+    const ap = $('#' + currentView + 'View');
+    if (ap) ap.classList.add('active');
+
+    if (searchClearBtn) {
+      searchClearBtn.style.display = searchInput.value ? 'block' : 'none';
+    }
+  }
+
+  // ---- STATUS NAVBAR TOGGLE ----
+  window.toggleStatusNavbar = function(e, id) {
+    e.stopPropagation();
+    const all = $$('.status-navbar-popup'), tgt = $(`#statusNav_${id}`);
+    all.forEach(p => { if (p !== tgt) p.classList.remove('open'); });
+    if (tgt) tgt.classList.toggle('open');
+  };
+
+  window.updateProjectStatus = async function(id, st) {
+    const p = projects.find(x => x.id === id);
+    if (p && p.status !== st) {
+      p.status = st;
+      p.updatedAt = Date.now();
+      await saveProjects();
+      renderAll();
+      if (paymentsModalOverlay.classList.contains('open')) renderPaymentsModal();
+      showToast('Status changed to ' + (STATUS[st] ? STATUS[st].label : st));
+    }
+  };
+
+  // =========================================================================
+  // SEAMLESS INTEGRATION & SLIDE TRANSITION TO INVOICE GENERATOR
+  // =========================================================================
+  window.slideTransitionToInvoice = function(e) {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const curtain = document.getElementById('slideCurtain');
+    if (curtain) curtain.classList.add('active');
+    setTimeout(() => {
+      window.location.href = 'invoiceGeneratorLuminavFilms.html';
+    }, 360);
+  };
+
+  window.openInInvoiceGenerator = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    const { start } = getProjectDates(p);
+    const paid = getProjectPaidTotal(p);
+    const payload = {
+      projectId: p.id,
+      title: p.title,
+      clientName: p.title,
+      deliverables: p.deliverables || '',
+      projectScope: p.deliverables ? `${p.title}\nScope: ${p.deliverables}` : p.title,
+      date: start || new Date().toISOString().slice(0, 10),
+      payment: Number(p.payment) || 0,
+      paid: paid
+    };
+    try {
+      localStorage.setItem('invoiceApp:incoming_project', JSON.stringify(payload));
+      sessionStorage.setItem('invoiceApp:incoming_project', JSON.stringify(payload));
+    } catch (e) {}
+    window.slideTransitionToInvoice();
+  };
+
+  window.openCurrentInInvoiceGenerator = function() {
+    if (activeInvoiceProjectId) {
+      window.openInInvoiceGenerator(activeInvoiceProjectId);
+    }
+  };
+
+  // =========================================================================
+  // WATER DROPLET MORPHING ANIMATION ENGINE (FAB -> INPUT DIALOG)
+  // =========================================================================
+  function triggerDropletSplash(x, y) {
+    const ring = document.createElement('div');
+    ring.className = 'droplet-splash-ring';
+    ring.style.left = x + 'px';
+    ring.style.top = y + 'px';
+    document.body.appendChild(ring);
+    setTimeout(() => ring.remove(), 800);
+  }
+
+  function openDropletModal() {
+    const rect = fabBtn.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+
+    triggerDropletSplash(cx, cy);
+    fabBtn.classList.add('hidden-state');
+
+    setTimeout(() => {
+      dropletOverlay.classList.remove('closing');
+      dropletOverlay.classList.add('open');
+      document.body.classList.add('modal-open');
+    }, 120);
+  }
+
+  function closeDropletModal() {
+    dropletOverlay.classList.add('closing');
+    setTimeout(() => {
+      dropletOverlay.classList.remove('open', 'closing');
+      document.body.classList.remove('modal-open');
+      editingId = null;
+      fabBtn.classList.remove('hidden-state');
+    }, 320);
+  }
+
+  window.openNewProjectModal = function() {
+    editingId = null;
+    modalTitle.textContent = 'New Project';
+    projectForm.reset();
+    expenseItemsContainer.innerHTML = '';
+    setModalStatus('upcoming');
+    modalStartDate.value = '';
+    modalEndDate.value = '';
+    modalEndDate.min = '';
+    updateModalCalculations();
+    openDropletModal();
+    setTimeout(() => titleInput.focus(), 400);
+  };
+
+  window.openEditProject = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    editingId = id;
+    modalTitle.textContent = 'Edit Project';
+    titleInput.value = p.title || '';
+    deliverablesInput.value = p.deliverables || '';
+    paymentInput.value = p.payment || '';
+    const { start, end } = getProjectDates(p);
+    modalStartDate.value = start || '';
+    modalEndDate.value = (end !== start) ? end : '';
+    modalEndDate.min = start || '';
+    expenseItemsContainer.innerHTML = '';
+    if (Array.isArray(p.expenseItems) && p.expenseItems.length > 0) {
+      p.expenseItems.forEach(i => addExpenseItemRow(i.title, i.amount));
+    } else if (Number(p.expenses) > 0) {
+      addExpenseItemRow('General Expenses', p.expenses);
+    }
+    setModalStatus(p.status || 'upcoming');
+    updateModalCalculations();
+    openDropletModal();
+    setTimeout(() => titleInput.focus(), 400);
+  };
+
+  // Duplicate / Clone Project Feature
+  window.duplicateProject = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    editingId = null;
+    modalTitle.textContent = 'Duplicate Project';
+    titleInput.value = (p.title || '') + ' (Copy)';
+    deliverablesInput.value = p.deliverables || '';
+    paymentInput.value = p.payment || '';
+    const { start, end } = getProjectDates(p);
+    modalStartDate.value = start || '';
+    modalEndDate.value = (end !== start) ? end : '';
+    modalEndDate.min = start || '';
+    expenseItemsContainer.innerHTML = '';
+    if (Array.isArray(p.expenseItems) && p.expenseItems.length > 0) {
+      p.expenseItems.forEach(i => addExpenseItemRow(i.title, i.amount));
+    }
+    setModalStatus('upcoming');
+    updateModalCalculations();
+    openDropletModal();
+    showToast('Duplicated project configuration', 'success');
+    setTimeout(() => titleInput.focus(), 400);
+  };
+
+  // Expense items builder
+  function addExpenseItemRow(title = '', amount = '') {
+    const row = document.createElement('div');
+    row.className = 'expense-builder-row';
+    row.innerHTML = `
+      <input type="text" class="form-control expense-title-input" placeholder="Expense description" value="${escapeHTML(title)}">
+      <input type="number" class="form-control expense-amount-input" min="0" step="0.01" placeholder="₹ Amount" value="${amount}">
+      <button type="button" class="btn-icon-del" title="Remove">&times;</button>
+    `;
+    row.querySelector('.btn-icon-del').addEventListener('click', () => { row.remove(); updateModalCalculations(); });
+    row.querySelector('.expense-amount-input').addEventListener('input', updateModalCalculations);
+    row.querySelector('.expense-title-input').addEventListener('input', updateModalCalculations);
+    expenseItemsContainer.appendChild(row);
+    updateModalCalculations();
+    return row;
+  }
+
+  window.addPresetExpense = function(category) {
+    const row = addExpenseItemRow(category, '');
+    const amtInput = row.querySelector('.expense-amount-input');
+    if (amtInput) amtInput.focus();
+  };
+
+  function getModalExpenseItems() {
+    return $$('.expense-builder-row', expenseItemsContainer).map(r => ({
+      title: r.querySelector('.expense-title-input').value.trim(),
+      amount: parseFloat(r.querySelector('.expense-amount-input').value) || 0
+    })).filter(i => i.amount > 0 || (i.title && i.amount > 0));
+  }
+
+  function updateModalCalculations() {
+    const payment = parseFloat(paymentInput.value) || 0;
+    const items = getModalExpenseItems();
+    const totalExp = items.reduce((a, i) => a + i.amount, 0);
+    const profit = payment - totalExp;
+    modalTotalExpensesLabel.textContent = 'Total: ' + fmtMoney(totalExp);
+    modalProfitPreview.textContent = fmtMoney(profit);
+    modalProfitPreview.style.color = profit >= 0 ? 'var(--accent)' : '#f87171';
+  }
+
+  function getModalStatus() {
+    const a = $('.status-opt.active');
+    return a ? a.dataset.status : 'upcoming';
+  }
+  function setModalStatus(st) {
+    $$('.status-opt').forEach(b => b.classList.toggle('active', b.dataset.status === st));
+  }
+
+  // Date range input validation & Clear Button
+  modalStartDate.addEventListener('change', () => {
+    if (modalStartDate.value) {
+      modalEndDate.min = modalStartDate.value;
+      if (modalEndDate.value && modalEndDate.value < modalStartDate.value) {
+        modalEndDate.value = modalStartDate.value;
+      }
+    } else {
+      modalEndDate.min = '';
+    }
+  });
+
+  if (modalClearDatesBtn) {
+    modalClearDatesBtn.addEventListener('click', () => {
+      modalStartDate.value = '';
+      modalEndDate.value = '';
+      modalEndDate.min = '';
+      showToast('Dates cleared (Flexible / Edit Project)');
+    });
+  }
+
+  // =========================================================================
+  // DEDICATED PAYMENT LEDGER & AUTO-COMPLETION SYSTEM
+  // =========================================================================
+  window.openPaymentRecorder = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    activePaymentProjectId = id;
+    activeInvoiceProjectId = id;
+    if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+
+    const total = Number(p.payment) || 0, paid = getProjectPaidTotal(p), remaining = Math.max(0, total - paid);
+    const paidPct = total > 0 ? Math.min(100, Math.round(paid / total * 100)) : (paid > 0 ? 100 : 0);
+    const today = new Date().toISOString().slice(0, 10);
+
+    $('#payLedgerTitle').textContent = p.title;
+    $('#payLedgerSubtitle').textContent = `Payment records & receivables ledger (Status: ${(STATUS[p.status]||STATUS.upcoming).label})`;
+    $('#payLedgerQuotation').textContent = fmtMoney(total);
+    $('#payLedgerCollected').textContent = fmtMoney(paid);
+    $('#payLedgerRemaining').textContent = remaining > 0 ? fmtMoney(remaining) : 'Settled ✓';
+    $('#payLedgerRemaining').style.color = remaining > 0 ? 'var(--accent)' : 'var(--status-completed)';
+    $('#payLedgerProgressPct').textContent = `${paidPct}%`;
+    $('#payLedgerProgressBar').style.width = `${paidPct}%`;
+    $('#payLedgerProgressBar').style.background = paidPct >= 100 ? 'var(--status-completed)' : 'var(--accent)';
+
+    $('#payLedgerRecordCount').textContent = `${p.paymentRecords.length} records`;
+
+    // Render Transaction Log
+    const historyList = $('#payLedgerHistoryList');
+    if (p.paymentRecords.length > 0) {
+      historyList.innerHTML = p.paymentRecords.map(r => `
+        <div class="pay-record-row">
+          <span class="pr-date">${fmtDateSingle(r.date)}</span>
+          <span class="pr-method">${escapeHTML(r.method || 'UPI')}</span>
+          <span class="pr-note" title="${escapeHTML(r.note || '')}">${escapeHTML(r.note || '—')}</span>
+          <span class="pr-amt">${fmtMoney(r.amount)}</span>
+          <button type="button" class="btn-icon-del" style="height:24px;width:24px;font-size:11px;" title="Delete Record" onclick="window.deletePaymentRecord('${p.id}','${r.id}')">&times;</button>
+        </div>
+      `).join('');
+    } else {
+      historyList.innerHTML = `<div style="font-size:12px;color:var(--text-muted);font-family:var(--font-mono);padding:8px 0;text-align:center;">No payment installments recorded yet.</div>`;
+    }
+
+    // Populate Payment Methods
+    const methodSelect = $('#payLedgerMethodSelect');
+    methodSelect.innerHTML = PAYMENT_METHODS.map(m => `<option value="${m}">${m}</option>`).join('');
+
+    // Setup input fields
+    $('#payLedgerAmtInput').value = remaining > 0 ? remaining : '';
+    $('#payLedgerDateInput').value = today;
+    $('#payLedgerNoteInput').value = '';
+
+    // Fast buttons
+    $('#payLedgerAdvance50Btn').onclick = () => {
+      const half = Math.round((total * 0.5) * 100) / 100;
+      $('#payLedgerAmtInput').value = half;
+      $('#payLedgerNoteInput').value = '50% Advance Payment';
+    };
+    $('#payLedgerFillFullBtn').onclick = () => {
+      $('#payLedgerAmtInput').value = remaining > 0 ? remaining : total;
+      $('#payLedgerNoteInput').value = 'Full Balance Settlement';
+    };
+
+    $('#payLedgerSubmitBtn').onclick = () => window.submitModalPayment(p.id);
+    $('#payLedgerPrintBtn').onclick = () => {
+      window.closePaymentLedger();
+      window.openInvoiceSummary(p.id);
+    };
+    $('#payLedgerGenOfficialInvoiceBtn').onclick = () => {
+      window.closePaymentLedger();
+      window.openInInvoiceGenerator(p.id);
+    };
+
+    paymentLedgerModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  };
+
+  window.closePaymentLedger = function() {
+    paymentLedgerModalOverlay.classList.remove('open');
+    if (!dropletOverlay.classList.contains('open') && !paymentsModalOverlay.classList.contains('open')) {
+      document.body.classList.remove('modal-open');
+    }
+  };
+
+  window.submitModalPayment = async function(projectId) {
+    const p = projects.find(x => x.id === projectId);
+    if (!p) return;
+    const amt = parseFloat($('#payLedgerAmtInput').value) || 0;
+    const date = $('#payLedgerDateInput').value;
+    const method = $('#payLedgerMethodSelect').value;
+    const note = ($('#payLedgerNoteInput').value || '').trim();
+
+    if (amt <= 0) { showToast('Please enter a valid payment amount', 'error'); return; }
+    if (!date) { showToast('Please select a payment date', 'error'); return; }
+
+    if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+    p.paymentRecords.push({
+      id: payUid(),
+      amount: amt,
+      date: date,
+      method: method,
+      note: note,
+      createdAt: Date.now()
+    });
+    p.updatedAt = Date.now();
+
+    // AUTO-COMPLETE CHECK
+    const totalFee = Number(p.payment) || 0;
+    const paidTotal = getProjectPaidTotal(p);
+
+    if (totalFee > 0 && paidTotal >= totalFee && p.status !== 'completed') {
+      p.status = 'completed';
+      showToast(`🎉 Payments complete! Marked "${p.title}" as Completed!`, 'success');
+    } else {
+      showToast(`Recorded ${fmtMoney(amt)} payment via ${method}`, 'success');
+    }
+
+    await saveProjects();
+    renderAll();
+    if (paymentsModalOverlay.classList.contains('open')) renderPaymentsModal();
+    window.openPaymentRecorder(projectId);
+  };
+
+  window.deletePaymentRecord = async function(projectId, payId) {
+    const p = projects.find(x => x.id === projectId);
+    if (!p || !Array.isArray(p.paymentRecords)) return;
+    p.paymentRecords = p.paymentRecords.filter(r => r.id !== payId);
+    p.updatedAt = Date.now();
+    await saveProjects();
+    renderAll();
+    if (paymentsModalOverlay.classList.contains('open')) renderPaymentsModal();
+    if (paymentLedgerModalOverlay.classList.contains('open')) window.openPaymentRecorder(projectId);
+    showToast('Payment record removed');
+  };
+
+  // =========================================================================
+  // OUTSTANDING PAYMENTS & RECEIVABLES WINDOW LOGIC
+  // =========================================================================
+  function renderPaymentsModal() {
+    let pendingProjects = projects.filter(p => {
+      const total = Number(p.payment) || 0, paid = getProjectPaidTotal(p);
+      return total > paid;
+    });
+    let settledProjects = projects.filter(p => {
+      const total = Number(p.payment) || 0, paid = getProjectPaidTotal(p);
+      return total > 0 && paid >= total;
+    });
+
+    let totalPendingSum = pendingProjects.reduce((a, p) => a + getProjectRemaining(p), 0);
+    let totalCollectedSum = projects.reduce((a, p) => a + getProjectPaidTotal(p), 0);
+
+    $('#winKpiPending').textContent = fmtMoney(totalPendingSum);
+    $('#winKpiCollected').textContent = fmtMoney(totalCollectedSum);
+    $('#winKpiCount').textContent = pendingProjects.length + ' projects';
+
+    let displayList = [];
+    if (payWindowFilter === 'pending') displayList = pendingProjects;
+    else if (payWindowFilter === 'settled') displayList = settledProjects;
+    else displayList = projects.filter(p => (Number(p.payment) || 0) > 0);
+
+    if (payWindowSearch.trim()) {
+      const q = payWindowSearch.trim().toLowerCase();
+      displayList = displayList.filter(s => (s.title || '').toLowerCase().includes(q) || (s.deliverables || '').toLowerCase().includes(q));
+    }
+
+    if (!displayList.length) {
+      paymentsListContainer.innerHTML = `
+        <div class="empty-state">
+          <div class="empty-icon">✓</div>
+          <div class="empty-title">${payWindowFilter === 'pending' ? 'All Payments Settled!' : 'No Projects Found'}</div>
+          <div class="empty-desc">${payWindowFilter === 'pending' ? 'You have zero pending receivables across all projects.' : 'No projects matching the search or filter.'}</div>
+        </div>
+      `;
+      return;
+    }
+
+    const today = new Date().toISOString().slice(0, 10);
+
+    paymentsListContainer.innerHTML = displayList.map(p => {
+      const total = Number(p.payment) || 0, paid = getProjectPaidTotal(p), remaining = Math.max(0, total - paid);
+      const paidPct = total > 0 ? Math.min(100, Math.round(paid / total * 100)) : 0;
+      const isSettled = paid >= total && total > 0;
+      const { start, end } = getProjectDates(p);
+
+      return `
+        <div class="pay-project-card ${isSettled ? 'settled' : 'pending'}">
+          <div class="pay-project-head">
+            <div>
+              <div class="pay-project-title">${escapeHTML(p.title)}</div>
+              <div class="pay-project-meta">
+                <span>Dates: <strong>${fmtDateRange(start, end)}</strong></span> &bull; 
+                <span>Status: <strong style="color:${(STATUS[p.status]||STATUS.upcoming).color};">${(STATUS[p.status]||STATUS.upcoming).label}</strong></span>
+              </div>
+            </div>
+            <div class="pay-figure-item">
+              <span class="pay-figure-label">Total Fee</span>
+              <span class="pay-figure-val">${fmtMoney(total)}</span>
+            </div>
+            <div class="pay-figure-item">
+              <span class="pay-figure-label">Collected</span>
+              <span class="pay-figure-val" style="color:var(--status-completed);">${fmtMoney(paid)}</span>
+            </div>
+            <div class="pay-figure-item">
+              <span class="pay-figure-label">Remaining</span>
+              <span class="pay-figure-val" style="color:${remaining > 0 ? 'var(--status-pending)' : 'var(--status-completed)'};">${remaining > 0 ? fmtMoney(remaining) : 'Settled ✓'}</span>
+            </div>
+          </div>
+
+          <div class="progress-track" style="height:6px;background:rgba(255,255,255,0.06);">
+            <div class="progress-fill" style="width:${paidPct}%;background:${isSettled ? 'var(--status-completed)' : 'var(--accent)'};"></div>
+          </div>
+
+          ${Array.isArray(p.paymentRecords) && p.paymentRecords.length ? `
+            <div class="pay-history-container">
+              <div class="pay-history-title"><span>Payment History</span><span>${p.paymentRecords.length} records</span></div>
+              ${p.paymentRecords.map(r => `
+                <div class="pay-record-row">
+                  <span class="pr-date">${fmtDateSingle(r.date)}</span>
+                  <span class="pr-method">${escapeHTML(r.method || 'UPI')}</span>
+                  <span class="pr-note" title="${escapeHTML(r.note || '')}">${escapeHTML(r.note || '—')}</span>
+                  <span class="pr-amt">${fmtMoney(r.amount)}</span>
+                  <button type="button" class="btn-icon-del" style="height:22px;width:22px;font-size:11px;" title="Delete" onclick="window.winDeletePay('${p.id}','${r.id}')">&times;</button>
+                </div>
+              `).join('')}
+            </div>` : ''}
+
+          <!-- Quick Record Payment Form -->
+          <div class="quick-pay-form">
+            <input type="number" class="form-control" id="winAmt_${p.id}" min="0.01" step="0.01" placeholder="₹ Amount" value="${remaining > 0 ? remaining : ''}">
+            <input type="date" class="form-control" id="winDate_${p.id}" value="${today}">
+            <select class="form-control" id="winMethod_${p.id}">
+              ${PAYMENT_METHODS.map(m => `<option value="${m}">${m}</option>`).join('')}
+            </select>
+            <input type="text" class="form-control" id="winNote_${p.id}" placeholder="Ref / note (e.g. Final Settlement)">
+            <button class="btn btn-primary btn-sm" onclick="window.winAddPayment('${p.id}')">
+              + Record Pay
+            </button>
+            ${remaining > 0 ? `<button class="btn btn-sm btn-ghost" style="color:var(--accent);border-color:var(--border-accent);" title="Quickly settle the full ${fmtMoney(remaining)} balance" onclick="window.quickSettleProject('${p.id}')">⚡ Settle All</button>` : ''}
+          </div>
+
+          <div style="display:flex;justify-content:flex-end;gap:8px;padding-top:4px;flex-wrap:wrap;">
+            <button class="btn btn-sm btn-primary" onclick="window.openInInvoiceGenerator('${p.id}')">
+              📄 Official Invoice ↗
+            </button>
+            <button class="btn btn-sm btn-ghost" onclick="window.openInvoiceSummary('${p.id}')">
+              Summary
+            </button>
+            <button class="btn btn-sm btn-ghost" onclick="window.closePaymentsModal();window.openEditProject('${p.id}');">
+              ✏️ Edit Details
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  window.winAddPayment = async function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    const amtEl = document.getElementById(`winAmt_${id}`);
+    const dateEl = document.getElementById(`winDate_${id}`);
+    const methodEl = document.getElementById(`winMethod_${id}`);
+    const noteEl = document.getElementById(`winNote_${id}`);
+
+    const amt = parseFloat(amtEl ? amtEl.value : 0) || 0;
+    const date = dateEl ? dateEl.value : '';
+    const method = methodEl ? methodEl.value : 'UPI';
+    const note = (noteEl ? noteEl.value : '').trim();
+
+    if (amt <= 0) { showToast('Enter valid amount', 'error'); return; }
+    if (!date) { showToast('Pick a date', 'error'); return; }
+
+    if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+    p.paymentRecords.push({ id: payUid(), amount: amt, date: date, method: method, note: note, createdAt: Date.now() });
+    p.updatedAt = Date.now();
+
+    const total = Number(p.payment) || 0, paid = getProjectPaidTotal(p);
+    if (paid >= total && total > 0 && p.status !== 'completed') {
+      p.status = 'completed';
+      showToast(`🎉 Marked "${p.title}" as Completed!`, 'success');
+    } else {
+      showToast(`Logged ${fmtMoney(amt)} for ${p.title}`, 'success');
+    }
+
+    await saveProjects();
+    renderAll();
+    renderPaymentsModal();
+  };
+
+  window.quickSettleProject = async function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    const remaining = getProjectRemaining(p);
+    if (remaining <= 0) return;
+    const today = new Date().toISOString().slice(0, 10);
+    if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+    p.paymentRecords.push({ id: payUid(), amount: remaining, date: today, method: 'UPI', note: 'Full Balance Settlement', createdAt: Date.now() });
+    p.status = 'completed';
+    p.updatedAt = Date.now();
+    await saveProjects();
+    renderAll();
+    renderPaymentsModal();
+    showToast(`🎉 Settled ${fmtMoney(remaining)} & Marked as Completed!`, 'success');
+  };
+
+  window.winDeletePay = async function(pid, payId) {
+    const p = projects.find(x => x.id === pid);
+    if (!p || !Array.isArray(p.paymentRecords)) return;
+    p.paymentRecords = p.paymentRecords.filter(r => r.id !== payId);
+    p.updatedAt = Date.now();
+    await saveProjects();
+    renderAll();
+    renderPaymentsModal();
+    showToast('Payment removed');
+  };
+
+  window.openPaymentsModal = function() {
+    renderPaymentsModal();
+    paymentsModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+    setTimeout(() => { if (winSearchInput) winSearchInput.focus(); }, 300);
+  };
+  window.closePaymentsModal = function() {
+    paymentsModalOverlay.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  };
+
+  // =========================================================================
+  // PRINTABLE INVOICE / SUMMARY GENERATOR
+  // =========================================================================
+  window.openInvoiceSummary = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    activeInvoiceProjectId = id;
+    const total = Number(p.payment) || 0;
+    const expTotal = getProjectExpensesTotal(p);
+    const netProfit = total - expTotal;
+    const paid = getProjectPaidTotal(p);
+    const balance = Math.max(0, total - paid);
+    const { start, end } = getProjectDates(p);
+    const idx = projects.findIndex(x => x.id === id);
+
+    $('#invProjectSeq').textContent = `PROJECT #${String(idx + 1).padStart(3, '0')}`;
+    $('#invDateGenerated').textContent = fmtDateSingle(new Date().toISOString().slice(0, 10));
+    $('#invClientTitle').textContent = p.title;
+    $('#invProjectDates').textContent = fmtDateRange(start, end);
+    $('#invDeliverables').textContent = p.deliverables || 'As per project agreement';
+
+    // Build items table
+    let rows = `<tr><td><strong>Production, Editing &amp; Studio Services</strong><br><span style="color:#7a7568;font-size:12px;">Agreed Contract Quotation</span></td><td style="text-align:right;font-weight:700;">${fmtMoney(total)}</td></tr>`;
+    
+    if (Array.isArray(p.expenseItems) && p.expenseItems.length > 0) {
+      p.expenseItems.forEach(i => {
+        rows += `<tr><td style="color:#7a7568;">Expense: ${escapeHTML(i.title || 'Item')}</td><td style="text-align:right;color:#7a7568;">-${fmtMoney(i.amount)}</td></tr>`;
+      });
+    }
+
+    if (Array.isArray(p.paymentRecords) && p.paymentRecords.length > 0) {
+      p.paymentRecords.forEach(r => {
+        rows += `<tr><td style="color:#2f855a;">Payment Received (${fmtDateSingle(r.date)} via ${escapeHTML(r.method || 'UPI')})</td><td style="text-align:right;color:#2f855a;">-${fmtMoney(r.amount)}</td></tr>`;
+      });
+    }
+
+    $('#invTableBody').innerHTML = rows;
+    $('#invTotalQuoted').textContent = fmtMoney(total);
+    $('#invTotalExpenses').textContent = fmtMoney(expTotal);
+    $('#invNetProfit').textContent = fmtMoney(netProfit);
+    $('#invTotalCollected').textContent = fmtMoney(paid);
+    $('#invBalanceDue').textContent = balance > 0 ? fmtMoney(balance) : 'PAID IN FULL ✓';
+    $('#invBalanceDue').style.color = balance > 0 ? '#b9803c' : '#2f855a';
+
+    invoiceModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  };
+
+  window.closeInvoiceModal = function() {
+    invoiceModalOverlay.classList.remove('open');
+    document.body.classList.remove('modal-open');
+  };
+
+  // ---- DELETE PROJECT ----
+  window.confirmDeleteProject = function(id) {
+    const p = projects.find(x => x.id === id);
+    if (!p) return;
+    confirmTitle.textContent = 'Delete Project';
+    confirmMessage.innerHTML = `<p>Are you sure you want to permanently delete <strong>"${escapeHTML(p.title)}"</strong>?</p><p style="color:var(--text-muted);font-size:12px;margin-top:6px;">This will remove all associated itemized expenses and payment records.</p>`;
+    confirmButtons.innerHTML = `
+      <button class="btn btn-ghost" onclick="window.closeAllModals()">Cancel</button>
+      <button class="btn btn-danger" onclick="window.executeDelete('${id}')">Delete Forever</button>
+    `;
+    confirmModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  };
+
+  window.executeDelete = async function(id) {
+    projects = projects.filter(x => x.id !== id);
+    await saveProjects();
+    closeAllModalsInternal();
+    renderAll();
+    showToast('Project deleted');
+  };
+
+  // Close all modal instances cleanly
+  function closeAllModalsInternal() {
+    dropletOverlay.classList.remove('open', 'closing');
+    paymentLedgerModalOverlay.classList.remove('open');
+    confirmModalOverlay.classList.remove('open');
+    dataModalOverlay.classList.remove('open');
+    paymentsModalOverlay.classList.remove('open');
+    invoiceModalOverlay.classList.remove('open');
+    shortcutsModalOverlay.classList.remove('open');
+    document.body.classList.remove('modal-open');
+    editingId = null;
+    fabBtn.classList.remove('hidden-state');
+  }
+  window.closeAllModals = closeAllModalsInternal;
+
+  // ---- FORM SUBMIT ----
+  projectForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const title = titleInput.value.trim();
+    if (!title) { showToast('Project title / client is required', 'error'); return; }
+    const startDate = modalStartDate.value || '', endDate = modalEndDate.value || startDate;
+    const deliverables = deliverablesInput.value.trim();
+    const payment = parseFloat(paymentInput.value) || 0;
+    const expenseItems = getModalExpenseItems();
+    const totalExpenses = expenseItems.reduce((a, i) => a + i.amount, 0);
+    const status = getModalStatus();
+
+    if (editingId) {
+      const p = projects.find(x => x.id === editingId);
+      if (p) {
+        Object.assign(p, {
+          title, startDate, endDate, deliverables, payment,
+          expenses: totalExpenses, expenseItems, status, updatedAt: Date.now()
+        });
+      }
+      showToast('Project details updated');
+    } else {
+      projects.push({
+        id: uid(),
+        title, startDate, endDate, deliverables, payment,
+        expenses: totalExpenses, expenseItems, status,
+        paymentRecords: [],
+        createdAt: Date.now(),
+        updatedAt: Date.now()
+      });
+      showToast('New project created successfully', 'success');
+    }
+    await saveProjects();
+    closeDropletModal();
+    renderAll();
+  });
+
+  // ---- EVENT BINDINGS ----
+  fabBtn.addEventListener('click', window.openNewProjectModal);
+  $('#modalCloseBtn').addEventListener('click', closeDropletModal);
+  $('#modalCancelBtn').addEventListener('click', closeDropletModal);
+  $('#addExpenseItemBtn').addEventListener('click', () => addExpenseItemRow('', ''));
+  paymentInput.addEventListener('input', updateModalCalculations);
+  $$('.status-opt').forEach(b => b.addEventListener('click', () => setModalStatus(b.dataset.status)));
+
+  // Table Column Sort Click Handlers
+  $$('.data-table th.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.sort;
+      if (sortColumn === col) {
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortColumn = col;
+        sortDirection = (col === 'payment' || col === 'paid' || col === 'expenses' || col === 'profit') ? 'desc' : 'asc';
+      }
+      renderAll();
+    });
+  });
+
+  // View & Filter Toggles
+  $$('.segmented-group button[data-view]').forEach(b => b.addEventListener('click', () => {
+    currentView = b.dataset.view;
+    renderAll();
+  }));
+  $$('#statusFilterGroup button[data-filter]').forEach(b => b.addEventListener('click', () => {
+    currentFilter = b.dataset.filter;
+    renderAll();
+  }));
+  $$('#payWindowFilterGroup button[data-pfilter]').forEach(b => b.addEventListener('click', () => {
+    $$('#payWindowFilterGroup button[data-pfilter]').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    payWindowFilter = b.dataset.pfilter;
+    renderPaymentsModal();
+  }));
+
+  if (winSearchInput) {
+    winSearchInput.addEventListener('input', e => {
+      payWindowSearch = e.target.value;
+      renderPaymentsModal();
+    });
+  }
+
+  searchInput.addEventListener('input', e => { 
+    searchQuery = e.target.value; 
+    renderAll(); 
+  });
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      renderAll();
+      searchInput.focus();
+    });
+  }
+
+  function handleCustomDateInput() {
+    $$('button[data-range-preset]').forEach(b => b.classList.remove('active'));
+    renderAll();
+  }
+  filterStart.addEventListener('input', handleCustomDateInput);
+  filterEnd.addEventListener('input', handleCustomDateInput);
+
+  $('#clearDatesBtn').addEventListener('click', () => {
+    filterStart.value = ''; filterEnd.value = '';
+    $$('button[data-range-preset]').forEach(b => b.classList.remove('active'));
+    const a = $('button[data-range-preset="all"]');
+    if (a) a.classList.add('active');
+    renderAll();
+  });
+
+  $$('button[data-range-preset]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('button[data-range-preset]').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const now = new Date(), p = btn.dataset.rangePreset;
+      if (p === 'all') {
+        filterStart.value = ''; filterEnd.value = '';
+      } else if (p === 'this-month') {
+        const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0');
+        const last = new Date(y, now.getMonth() + 1, 0).getDate();
+        filterStart.value = `${y}-${m}-01`;
+        filterEnd.value = `${y}-${m}-${String(last).padStart(2, '0')}`;
+      } else if (p === 'this-year') {
+        filterStart.value = now.getFullYear() + '-01-01';
+        filterEnd.value = now.getFullYear() + '-12-31';
+      }
+      renderAll();
+    });
+  });
+
+  // ---- UNIFIED DATA & CSV HUB ----
+  $('#dataBtn').addEventListener('click', () => {
+    dataModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  });
+
+  $('#shortcutsBtn').addEventListener('click', () => {
+    shortcutsModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  });
+
+  // ---- UNIFIED DATA & CSV HUB (Projects & Invoices) ----
+  function getInvoiceDatabaseBackup() {
+    const invoiceData = {};
+    const prefix = 'invoiceApp:';
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.indexOf(prefix) === 0) {
+          const relKey = k.slice(prefix.length);
+          if (relKey !== 'diagnostic:write-test' && relKey !== 'diagnostic:last-load' && relKey !== 'incoming_project') {
+            invoiceData[relKey] = localStorage.getItem(k);
+          }
+        }
+      }
+    } catch(e) {}
+    return invoiceData;
+  }
+
+  function getInvoiceCountFromBackup(invoiceData) {
+    if (!invoiceData || typeof invoiceData !== 'object') return 0;
+    try {
+      const historyRaw = invoiceData['invoice-history'] || invoiceData['invoiceApp:invoice-history'];
+      if (historyRaw) {
+        const list = JSON.parse(historyRaw);
+        return Array.isArray(list) ? list.length : 0;
+      }
+    } catch(e) {}
+    return 0;
+  }
+
+  function restoreInvoiceDatabase(invMap, replaceExisting = false) {
+    if (!invMap || typeof invMap !== 'object') return 0;
+    const prefix = 'invoiceApp:';
+    try {
+      if (replaceExisting) {
+        const existingKeys = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && k.indexOf(prefix) === 0 && !k.includes('diagnostic:')) {
+            existingKeys.push(k);
+          }
+        }
+        existingKeys.forEach(k => localStorage.removeItem(k));
+      }
+      Object.keys(invMap).forEach(k => {
+        const fullKey = k.indexOf(prefix) === 0 ? k : prefix + k;
+        if (typeof invMap[k] === 'string') {
+          localStorage.setItem(fullKey, invMap[k]);
+        } else {
+          localStorage.setItem(fullKey, JSON.stringify(invMap[k]));
+        }
+      });
+      return getInvoiceCountFromBackup(invMap);
+    } catch(e) {
+      return 0;
+    }
+  }
+
+  $('#exportBtn').addEventListener('click', () => {
+    const invoiceData = getInvoiceDatabaseBackup();
+    const invoiceCount = getInvoiceCountFromBackup(invoiceData);
+    const hasProjects = projects && projects.length > 0;
+    const hasInvoices = Object.keys(invoiceData).length > 0;
+
+    if (!hasProjects && !hasInvoices) {
+      showToast('No project or invoice data to export', 'error');
+      return;
+    }
+
+    const exportPayload = {
+      app: 'luminosity-studio-suite',
+      version: 6,
+      exportedAt: new Date().toISOString(),
+      projects: projects,
+      shoots: projects,
+      invoicesData: invoiceData,
+      data: invoiceData
+    };
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: 'application/json' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `studio-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+
+    const summaryParts = [];
+    if (hasProjects) summaryParts.push(`${projects.length} project${projects.length === 1 ? '' : 's'}`);
+    if (invoiceCount > 0) summaryParts.push(`${invoiceCount} invoice${invoiceCount === 1 ? '' : 's'}`);
+    else if (hasInvoices) summaryParts.push('invoice database');
+
+    showToast(`Exported backup with ${summaryParts.join(' & ')}`, 'success');
+    closeAllModalsInternal();
+  });
+
+  // CSV Export for Excel / Sheets
+  $('#exportCsvBtn').addEventListener('click', () => {
+    if (!projects.length) { showToast('No data to export', 'error'); return; }
+    
+    const headers = ['Project ID', 'Client / Title', 'Start Date', 'End Date', 'Status', 'Quotation (INR)', 'Paid Inflow (INR)', 'Remaining Due (INR)', 'Total Expenses (INR)', 'Net Profit (INR)', 'Deliverables', 'Payment History Summary'];
+    
+    const rows = projects.map((p, idx) => {
+      const { start, end } = getProjectDates(p);
+      const quoted = Number(p.payment) || 0;
+      const paid = getProjectPaidTotal(p);
+      const remaining = Math.max(0, quoted - paid);
+      const expenses = getProjectExpensesTotal(p);
+      const profit = quoted - expenses;
+      const paySummary = (p.paymentRecords || []).map(r => `${r.date} [${r.method}]: Rs.${r.amount} (${r.note || 'No note'})`).join('; ');
+      
+      return [
+        `PROJECT-${String(idx + 1).padStart(3, '0')}`,
+        `"${(p.title || '').replace(/"/g, '""')}"`,
+        start || 'N/A',
+        end || 'N/A',
+        (STATUS[p.status] || STATUS.upcoming).label,
+        quoted,
+        paid,
+        remaining,
+        expenses,
+        profit,
+        `"${(p.deliverables || '').replace(/"/g, '""')}"`,
+        `"${paySummary.replace(/"/g, '""')}"`
+      ].join(',');
+    });
+
+    const csvContent = '\uFEFF' + headers.join(',') + '\n' + rows.join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `projects-financial-report-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    showToast(`Exported CSV spreadsheet with ${projects.length} projects`, 'success');
+    closeAllModalsInternal();
+  });
+
+  $('#importBtn').addEventListener('click', () => fileInput.click());
+
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        const list = Array.isArray(data) ? data : (data.projects || data.shoots || []);
+        const invoiceData = (data && typeof data === 'object') ? (data.invoicesData || data.data || (!Array.isArray(data) && !data.projects && !data.shoots ? data : null)) : null;
+        const invoiceCount = getInvoiceCountFromBackup(invoiceData);
+        const hasProjects = list && list.length > 0;
+        const hasInvoices = invoiceData && Object.keys(invoiceData).length > 0;
+
+        if (!hasProjects && !hasInvoices) {
+          throw new Error('File contains no projects or invoice data');
+        }
+        closeAllModalsInternal();
+
+        const countParts = [];
+        if (hasProjects) countParts.push(`<strong>${list.length} project${list.length === 1 ? '' : 's'}</strong>`);
+        if (invoiceCount > 0) countParts.push(`<strong>${invoiceCount} invoice${invoiceCount === 1 ? '' : 's'}</strong>`);
+        else if (hasInvoices) countParts.push(`<strong>invoice database</strong>`);
+
+        confirmTitle.textContent = 'Import Studio Backup';
+        confirmMessage.innerHTML = `<p>Found ${countParts.join(' and ')} in the backup file.</p><p style="color:var(--text-secondary);font-size:12.5px;margin-top:6px;">Choose whether to merge records with existing data or replace everything.</p>`;
+        confirmButtons.innerHTML = `
+          <button class="btn btn-ghost" onclick="window.closeAllModals()">Cancel</button>
+          <button class="btn btn-primary" id="mergeBtn">Merge with Existing</button>
+          <button class="btn btn-danger" id="replaceBtn">Replace All</button>
+        `;
+        confirmModalOverlay.classList.add('open');
+        document.body.classList.add('modal-open');
+
+        $('#mergeBtn').onclick = async () => {
+          if (hasProjects) {
+            const ids = new Set(projects.map(p => p.id));
+            const prepared = list.map(p => {
+              const copy = Object.assign({}, p);
+              if (ids.has(copy.id)) copy.id = uid();
+              if (!Array.isArray(copy.paymentRecords)) copy.paymentRecords = [];
+              return copy;
+            });
+            projects = projects.concat(prepared);
+            await saveProjects();
+          }
+          if (hasInvoices) {
+            restoreInvoiceDatabase(invoiceData, false);
+          }
+          closeAllModalsInternal();
+          renderAll();
+          showToast(`Merged backup (${hasProjects ? `${list.length} projects` : ''}${hasProjects && hasInvoices ? ', ' : ''}${hasInvoices ? (invoiceCount ? `${invoiceCount} invoices` : 'invoice db') : ''})`, 'success');
+        };
+
+        $('#replaceBtn').onclick = async () => {
+          if (hasProjects) {
+            projects = list.map(p => {
+              if (!Array.isArray(p.paymentRecords)) p.paymentRecords = [];
+              return p;
+            });
+            await saveProjects();
+          }
+          if (hasInvoices) {
+            restoreInvoiceDatabase(invoiceData, true);
+          }
+          closeAllModalsInternal();
+          renderAll();
+          showToast(`Replaced database (${hasProjects ? `${list.length} projects` : ''}${hasProjects && hasInvoices ? ', ' : ''}${hasInvoices ? (invoiceCount ? `${invoiceCount} invoices` : 'invoice db') : ''})`, 'success');
+        };
+      } catch(err) {
+        showToast('Invalid JSON backup file: ' + err.message, 'error');
+      }
+      fileInput.value = '';
+    };
+    reader.readAsText(file);
+  });
+
+  // ---- REMAINING PAYMENTS BUTTON ----
+  $('#paymentsOverviewBtn').addEventListener('click', window.openPaymentsModal);
+  paymentsModalOverlay.addEventListener('click', e => {
+    if (e.target === paymentsModalOverlay) window.closePaymentsModal();
+  });
+
+  // ---- RESET (SKULL) BUTTON ----
+  $('#resetBtn').addEventListener('click', () => {
+    if (!projects.length) { showToast('Database is already empty'); return; }
+    confirmTitle.textContent = '💀 Wipe Studio Database?';
+    confirmMessage.innerHTML = `
+      <p style="color:#fca5a5;font-weight:600;">Danger Zone: Permanent Reset</p>
+      <p style="margin-top:6px;">This will irrevocably erase all projects, expenses, and payment records from your browser.</p>
+    `;
+    confirmButtons.innerHTML = `
+      <button class="btn btn-ghost" onclick="window.closeAllModals()">Cancel</button>
+      <button class="btn btn-danger" onclick="window.executeReset()">Yes, Clear Everything</button>
+    `;
+    confirmModalOverlay.classList.add('open');
+    document.body.classList.add('modal-open');
+  });
+
+  window.executeReset = async function() {
+    projects = [];
+    await saveProjects();
+    closeAllModalsInternal();
+    renderAll();
+    showToast('All projects cleared');
+  };
+
+  // Click outside to dismiss popups
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.status-picker-wrapper')) {
+      $$('.status-navbar-popup').forEach(p => p.classList.remove('open'));
+    }
+  });
+
+  // Global keybindings
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      $$('.status-navbar-popup').forEach(p => p.classList.remove('open'));
+      closeDropletModal();
+      closeAllModalsInternal();
+    }
+    if (e.key === '/' && document.activeElement !== searchInput && !document.activeElement.closest('form, input, textarea')) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === '?' && !document.activeElement.closest('form, input, textarea')) {
+      e.preventDefault();
+      shortcutsModalOverlay.classList.add('open');
+      document.body.classList.add('modal-open');
+    }
+    if ((e.key === '1' || e.key === '2' || e.key === '3') && !document.activeElement.closest('form, input, textarea') && !document.body.classList.contains('modal-open')) {
+      const views = ['table', 'grid', 'stats'];
+      currentView = views[parseInt(e.key, 10) - 1];
+      renderAll();
+    }
+    if ((e.key === 'n' || e.key === 'N') && !document.activeElement.closest('input, textarea, select') && !dropletOverlay.classList.contains('open') && !paymentsModalOverlay.classList.contains('open') && !paymentLedgerModalOverlay.classList.contains('open')) {
+      e.preventDefault();
+      window.openNewProjectModal();
+    }
+  });
+
+  dropletOverlay.addEventListener('click', e => {
+    if (e.target === dropletOverlay) closeDropletModal();
+  });
+  paymentLedgerModalOverlay.addEventListener('click', e => {
+    if (e.target === paymentLedgerModalOverlay) window.closePaymentLedger();
+  });
+  confirmModalOverlay.addEventListener('click', e => {
+    if (e.target === confirmModalOverlay) closeAllModalsInternal();
+  });
+  dataModalOverlay.addEventListener('click', e => {
+    if (e.target === dataModalOverlay) closeAllModalsInternal();
+  });
+  invoiceModalOverlay.addEventListener('click', e => {
+    if (e.target === invoiceModalOverlay) window.closeInvoiceModal();
+  });
+  shortcutsModalOverlay.addEventListener('click', e => {
+    if (e.target === shortcutsModalOverlay) closeAllModalsInternal();
+  });
+
+  // Initialize
+  loadProjects().then(renderAll);
+})();
+</script>
+</body>
+</html>

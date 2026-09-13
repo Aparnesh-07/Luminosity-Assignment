@@ -1,0 +1,123 @@
+{
+  "app": "luminosity-studio-suite",
+  "version": 6,
+  "exportedAt": "2026-08-29T08:05:50.135Z",
+  "projects": [
+    {
+      "id": "prj_mte2mcxpbxnve",
+      "title": "Brown Ion - Ornate Restaurant Content Shoot",
+      "startDate": "2026-08-23",
+      "endDate": "2026-08-23",
+      "deliverables": "Raw Data",
+      "payment": 5000,
+      "expenses": 0,
+      "expenseItems": [],
+      "status": "pending",
+      "paymentRecords": [],
+      "createdAt": 1787989226749,
+      "updatedAt": 1787989226749
+    },
+    {
+      "id": "prj_mte2ovd2022w1",
+      "title": "Mark Tailor Catalogue Shoot - Videos",
+      "startDate": "2026-08-08",
+      "endDate": "2026-08-09",
+      "deliverables": "Raw Data",
+      "payment": 34710,
+      "expenses": 22500,
+      "expenseItems": [
+        {
+          "title": "Gear Rental",
+          "amount": 22500
+        }
+      ],
+      "status": "pending",
+      "paymentRecords": [
+        {
+          "id": "py_mte2scf4xpp0r",
+          "amount": 10000,
+          "date": "2026-08-01",
+          "method": "Cash",
+          "note": "Advance #1",
+          "createdAt": 1787989506016
+        },
+        {
+          "id": "py_mte2tknn1d6uz",
+          "amount": 10000,
+          "date": "2026-08-13",
+          "method": "UPI",
+          "note": "Advance #2",
+          "createdAt": 1787989563347
+        }
+      ],
+      "createdAt": 1787989343942,
+      "updatedAt": 1787989563347
+    }
+  ],
+  "shoots": [
+    {
+      "id": "prj_mte2mcxpbxnve",
+      "title": "Brown Ion - Ornate Restaurant Content Shoot",
+      "startDate": "2026-08-23",
+      "endDate": "2026-08-23",
+      "deliverables": "Raw Data",
+      "payment": 5000,
+      "expenses": 0,
+      "expenseItems": [],
+      "status": "pending",
+      "paymentRecords": [],
+      "createdAt": 1787989226749,
+      "updatedAt": 1787989226749
+    },
+    {
+      "id": "prj_mte2ovd2022w1",
+      "title": "Mark Tailor Catalogue Shoot - Videos",
+      "startDate": "2026-08-08",
+      "endDate": "2026-08-09",
+      "deliverables": "Raw Data",
+      "payment": 34710,
+      "expenses": 22500,
+      "expenseItems": [
+        {
+          "title": "Gear Rental",
+          "amount": 22500
+        }
+      ],
+      "status": "pending",
+      "paymentRecords": [
+        {
+          "id": "py_mte2scf4xpp0r",
+          "amount": 10000,
+          "date": "2026-08-01",
+          "method": "Cash",
+          "note": "Advance #1",
+          "createdAt": 1787989506016
+        },
+        {
+          "id": "py_mte2tknn1d6uz",
+          "amount": 10000,
+          "date": "2026-08-13",
+          "method": "UPI",
+          "note": "Advance #2",
+          "createdAt": 1787989563347
+        }
+      ],
+      "createdAt": 1787989343942,
+      "updatedAt": 1787989563347
+    }
+  ],
+  "invoicesData": {
+    "settings": "{\"currency\":\"₹\",\"companyName\":\"Luminav Films\",\"companyAddress\":\"Godrej Garden City\\nAhmedabad\\n382470\\ninfo@luminavfilms.com\",\"companyPhone\":\"\",\"companyEmail\":\"\",\"logoDataUrl\":\"\",\"terms\":\"All deliverables are provided as per the agreed project scope.\\nAny additional revisions or services beyond the agreed scope may be charged separately.\\nThis invoice confirms that full payment has been received and the project has been successfully completed.\"}",
+    "invoice:AUG0113": "{\"id\":\"AUG0113\",\"date\":\"2026-08-23\",\"billName\":\"Kirtan Solanki\",\"billCompany\":\"Brown Ion\",\"billPhone\":\"\",\"billEmail\":\"\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"items\":[{\"key\":\"tml8tlz\",\"description\":\"Content Shoot (Photo + Video)\",\"qty\":1,\"price\":\"12000\"}],\"discount\":\"7000\",\"advance\":0}",
+    "seq:2026-08": "0",
+    "invoice:draft": "{\"id\":\"AUG0113\",\"date\":\"2026-08-23\",\"billName\":\"Kirtan Solanki\",\"billCompany\":\"Brown Ion\",\"billPhone\":\"\",\"billEmail\":\"\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"items\":[{\"key\":\"tml8tlz\",\"description\":\"Content Shoot (Photo + Video)\",\"qty\":1,\"price\":\"12000\"}],\"discount\":\"7000\",\"advance\":0}",
+    "invoice-history": "[{\"id\":\"AUG0113\",\"dateIso\":\"2026-08-23\",\"dateDisplay\":\"23/8/2026\",\"billName\":\"Kirtan Solanki\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"total\":5000,\"savedAt\":1787989791873}]"
+  },
+  "data": {
+    "settings": "{\"currency\":\"₹\",\"companyName\":\"Luminav Films\",\"companyAddress\":\"Godrej Garden City\\nAhmedabad\\n382470\\ninfo@luminavfilms.com\",\"companyPhone\":\"\",\"companyEmail\":\"\",\"logoDataUrl\":\"\",\"terms\":\"All deliverables are provided as per the agreed project scope.\\nAny additional revisions or services beyond the agreed scope may be charged separately.\\nThis invoice confirms that full payment has been received and the project has been successfully completed.\"}",
+    "invoice:AUG0113": "{\"id\":\"AUG0113\",\"date\":\"2026-08-23\",\"billName\":\"Kirtan Solanki\",\"billCompany\":\"Brown Ion\",\"billPhone\":\"\",\"billEmail\":\"\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"items\":[{\"key\":\"tml8tlz\",\"description\":\"Content Shoot (Photo + Video)\",\"qty\":1,\"price\":\"12000\"}],\"discount\":\"7000\",\"advance\":0}",
+    "seq:2026-08": "0",
+    "invoice:draft": "{\"id\":\"AUG0113\",\"date\":\"2026-08-23\",\"billName\":\"Kirtan Solanki\",\"billCompany\":\"Brown Ion\",\"billPhone\":\"\",\"billEmail\":\"\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"items\":[{\"key\":\"tml8tlz\",\"description\":\"Content Shoot (Photo + Video)\",\"qty\":1,\"price\":\"12000\"}],\"discount\":\"7000\",\"advance\":0}",
+    "invoice-history": "[{\"id\":\"AUG0113\",\"dateIso\":\"2026-08-23\",\"dateDisplay\":\"23/8/2026\",\"billName\":\"Kirtan Solanki\",\"project\":\"Brown Ion - Ornate Restaurant Content Shoot\\nScope: Raw Data\",\"total\":5000,\"savedAt\":1787989791873}]"
+  }
+}

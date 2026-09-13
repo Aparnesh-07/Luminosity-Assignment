@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LUMINOSITY — Invoice Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Urbanist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <script src="html2pdf.bundle.min.js"></script>
+  <script>
+    if (typeof html2pdf === 'undefined') {
+      const s = document.createElement('script');
+      s.src = "https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";
+      document.head.appendChild(s);
+    }
+  </script>
+  <link rel="stylesheet" href="invoiceGeneratorLuminavFilms.css">
+
+</head>
+
+<body>
+
+  <!-- =========================================================================
+       LEFT FRAME HOVER STRIP (SLIDE TO PROJECT TRACKER)
+       ========================================================================= -->
+  <a href="shoot_tracker.html" class="left-edge-strip" id="leftTrackerStrip" onclick="window.slideTransitionToTracker(event)" title="Click to Slide into Project Tracker">
+    <div class="left-strip-drawer-body">
+      <div class="left-strip-header">
+        <div class="left-strip-mark">
+          <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+        </div>
+        <div class="left-strip-title">Project Tracker</div>
+      </div>
+      <div class="left-strip-desc">Shoots, edit projects, &amp; financial ledger.</div>
+      <div class="left-strip-action-chip">
+        <span>Slide to Tracker</span>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+      </div>
+    </div>
+    <div class="left-strip-tab">
+      <div class="left-strip-dot"></div>
+      <div class="left-strip-label">
+        <span>PROJECT TRACKER</span>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+      </div>
+    </div>
+  </a>
+
+  <!-- Slide Curtain Layer -->
+  <div class="slide-curtain-left" id="slideCurtainLeft"></div>
+
+  <div class="shell">
+
+    <!-- ================= STAGE (INVOICE PREVIEW / SHEET ON LEFT) ================= -->
+    <main class="stage">
+
+      <!-- Invoice editing + preview -->
+      <div id="stageInvoiceView">
+        <div class="stage-toolbar">
+          <div class="invoice-id-chip">#<span id="chipId">—</span></div>
+          <div class="toolbar-actions">
+            <button class="btn btn-light" id="btnNewInvoiceTop">New invoice</button>
+            <button class="link-btn" id="btnPrint">Print instead</button>
+            <button class="btn btn-dark" id="btnExportPdf">Export PDF</button>
+          </div>
+        </div>
+
+        <div class="sheet-wrap">
+          <div class="sheet" id="sheet">
+            <div class="bar"></div>
+            <div class="sheet-body">
+
+              <div class="sheet-header">
+                <div>
+                  <h1 class="invoice-title">INVOICE</h1>
+                  <div class="company-block" id="companyBlock"></div>
+                </div>
+                <div class="header-right">
+                  <div class="logo-box" id="logoBox"><span class="mono">L</span></div>
+                  <div class="meta-box">
+                    <div class="meta-field" id="metaDate">—</div>
+                    <div class="meta-field" id="metaId">—</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="parties">
+                <div class="party-col" id="billBlock"></div>
+                <div class="party-col">
+                  <div class="party-label">Project details</div>
+                  <div class="project-text" id="projectBlock"></div>
+                </div>
+              </div>
+
+              <table class="items-table">
+                <thead>
+                  <tr>
+                    <th class="idx-col">#</th>
+                    <th>Description</th>
+                    <th class="num-col">Quantity</th>
+                    <th class="num-col">Price</th>
+                    <th class="num-col">Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="itemsBody"></tbody>
+              </table>
+
+              <div id="subtotalsBlock">
+                <div class="totals-row">
+                  <span class="t-label">Total</span>
+                  <span class="t-amount" id="totalAmount">₹ 0</span>
+                </div>
+              </div>
+
+              <div class="notes-block" id="notesBlock"></div>
+            </div>
+            <div class="bar"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Database (search / sort) view -->
+      <div id="stageDatabaseView" style="display:none;">
+        <div class="db-toolbar">
+          <input type="search" id="dbSearch" placeholder="Search by client, invoice #, or project…">
+          <div class="db-summary" id="dbSummary">0 invoices</div>
+        </div>
+        <div class="db-table-wrap">
+          <table class="db-table" id="dbTable">
+            <thead>
+              <tr>
+                <th data-sort="id">Invoice #</th>
+                <th data-sort="dateIso">Date</th>
+                <th data-sort="billName">Client</th>
+                <th data-sort="project">Project</th>
+                <th data-sort="total" class="num-col">Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="dbTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ================= SIDEBAR (DATA INPUT CONTROLS ON RIGHT) ================= -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div class="brand-mark">
+            <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+          </div>
+          <div>
+            <div class="brand-name">LUMINOSITY</div>
+            <div class="brand-sub">Invoice Generator</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-left:auto;">
+          <a href="index.html" class="btn btn-ghost" style="font-size:11px;padding:4px 9px;border:1px solid rgba(255,255,255,0.12);border-radius:6px;text-decoration:none;color:var(--sidebar-text-dim);display:inline-flex;align-items:center;gap:4px;" title="Log Out of Luminosity">
+            Log Out ⎋
+          </a>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="invoice">New invoice</button>
+        <button class="tab-btn" data-tab="settings">Defaults</button>
+        <button class="tab-btn" data-tab="database">Database</button>
+      </div>
+
+      <div class="tab-panels">
+
+        <!-- ---- INVOICE PANEL ---- -->
+        <section id="panel-invoice" class="panel active">
+
+          <div class="section-title">Bill to</div>
+          <div class="field-group">
+            <label class="field-label">Client name</label>
+            <input type="text" id="billName" placeholder="Yash Shah">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Client company</label>
+            <input type="text" id="billCompany" placeholder="Luminav Films">
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Phone</label>
+              <input type="tel" id="billPhone" placeholder="834711XXXX">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Email</label>
+              <input type="email" id="billEmail" placeholder="client@email.com">
+            </div>
+          </div>
+
+          <div class="section-title">Project details</div>
+          <div class="field-group">
+            <textarea id="projectDetails" placeholder='Shoot Services for "Antardwand" Short Film Shoot'></textarea>
+          </div>
+
+          <div class="section-title">Invoice details</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Date</label>
+              <input type="date" id="invoiceDate">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Invoice #</label>
+              <div style="display:flex;gap:6px;">
+                <input type="text" id="invoiceIdInput" style="text-transform:uppercase;">
+                <button class="btn btn-ghost" id="btnRegenId" title="Generate a new invoice number"
+                  style="padding:9px 10px;">⟳</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="section-title">Line items</div>
+          <div id="itemsContainer"></div>
+          <button class="btn btn-ghost btn-block" id="btnAddItem">+ Add item</button>
+
+          <div class="section-title">Adjustments</div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Discount</label>
+              <input type="number" id="invoiceDiscount" placeholder="0" min="0" step="0.01">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Advance paid</label>
+              <input type="number" id="invoiceAdvance" placeholder="0" min="0" step="0.01">
+            </div>
+          </div>
+
+          <div class="action-stack">
+            <button class="btn btn-primary btn-block" id="btnSaveInvoice">Save invoice to database</button>
+            <button class="btn btn-ghost btn-block" id="btnResetForm">Clear / New draft</button>
+            <button class="btn btn-ghost btn-block" id="btnNewInvoiceMain" style="display:none;">New</button>
+          </div>
+
+        </section>
+
+        <!-- ---- SETTINGS PANEL ---- -->
+        <section id="panel-settings" class="panel">
+
+          <div class="section-title">Company &amp; Brand</div>
+          <div class="field-group">
+            <label class="field-label">Business / Studio name</label>
+            <input type="text" id="setCompanyName" placeholder="Luminav Films">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Address / Details (multi-line)</label>
+            <textarea id="setCompanyAddress" placeholder="Bhopal, Madhya Pradesh&#10;India"></textarea>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label class="field-label">Phone</label>
+              <input type="tel" id="setCompanyPhone" placeholder="+91 834711XXXX">
+            </div>
+            <div class="field-group">
+              <label class="field-label">Email</label>
+              <input type="email" id="setCompanyEmail" placeholder="contact@luminavfilms.com">
+            </div>
+          </div>
+
+          <div class="section-title">Logo &amp; Brand Mark</div>
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+            <div class="logo-box" id="settingsLogoPreview" style="width:48px;height:48px;border-radius:8px;background:#252220;border:1px solid #4a453d;display:flex;align-items:center;justify-content:center;color:#d9a463;font-weight:700;">
+              <span class="mono">L</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <label class="btn btn-ghost" style="font-size:11.5px;padding:5px 10px;cursor:pointer;border:1px solid rgba(255,255,255,0.12);border-radius:6px;display:inline-block;text-align:center;">
+                Upload Logo
+                <input type="file" id="logoFileInput" accept="image/*" style="display:none;">
+              </label>
+              <button class="btn btn-ghost" id="btnRemoveLogo" style="font-size:11.5px;padding:3px 8px;color:#c0554a;">Remove logo</button>
+            </div>
+          </div>
+
+          <div class="section-title">Invoice defaults</div>
+          <div class="field-group">
+            <label class="field-label">Currency symbol</label>
+            <input type="text" id="setCurrency" placeholder="₹">
+          </div>
+          <div class="field-group">
+            <label class="field-label">Default terms / notes</label>
+            <textarea id="setTerms" placeholder="All deliverables are provided as per the agreed project scope…"></textarea>
+          </div>
+
+          <div class="status-msg" id="settingsSaveStatus" style="font-size:11.5px;color:var(--accent);margin-bottom:10px;"></div>
+
+          <div class="action-stack">
+            <button class="btn btn-primary btn-block" id="btnSaveSettings">Save defaults</button>
+            <button class="btn btn-ghost btn-block" id="btnResetSeq">Reset invoice counter</button>
+            <button class="btn btn-ghost btn-block" id="btnResetAll" style="color:#c0554a;">Reset all settings &amp; storage</button>
+          </div>
+
+        </section>
+
+        <!-- ---- DATABASE PANEL ---- -->
+        <section id="panel-database" class="panel">
+          <div class="section-title">Saved invoices &amp; summary</div>
+          <div style="background:#252220;border:1px solid #4a453d;border-radius:8px;padding:12px 14px;margin-bottom:14px;">
+            <div id="sidebarDbCount" style="font-size:14px;font-weight:700;color:var(--sidebar-text);">0 invoices</div>
+            <div id="sidebarDbTotal" style="font-size:12px;color:var(--accent);margin-top:2px;">₹ 0 total billed</div>
+          </div>
+
+          <p style="font-size:12.5px;color:var(--sidebar-text-dim);margin:0 0 16px;line-height:1.5;">
+            All saved invoices and project records are stored in your browser's local database. You can export a CSV spreadsheet or full studio JSON backup below.
+          </p>
+
+          <div class="action-stack">
+            <button class="btn btn-primary btn-block" id="btnExportCsv">Export all to CSV</button>
+            <button class="btn btn-ghost btn-block" id="btnExportBackup">Export database backup</button>
+            <button class="btn btn-ghost btn-block" id="btnExportBackup2" style="display:none;">Backup</button>
+            <label class="btn btn-ghost btn-block" style="cursor:pointer;text-align:center;">
+              Import backup (JSON)
+              <input type="file" id="backupFileInput" accept="application/json" style="display:none;">
+            </label>
+          </div>
+        </section>
+
+      </div>
+
+      <div class="persist-note" id="persistNote" style="margin-top:auto;padding:14px 22px;border-top:1px solid rgba(255,255,255,0.06);font-size:10.5px;color:var(--sidebar-text-dim);display:flex;align-items:center;gap:6px;">
+        <span class="persist-dot" style="width:6px;height:6px;border-radius:50%;background:#7fbf7f;display:inline-block;"></span>
+        <span>Local Database Online</span>
+      </div>
+    </aside>
+
+  </div>
+
+  <script src="invoiceGeneratorLuminavFilms.js"></script>
+
+</body>
+
+</html>

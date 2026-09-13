@@ -1,0 +1,109 @@
+{
+  "app": "project-tracker-luminav",
+  "version": 5,
+  "exportedAt": "2026-08-29T07:50:20.698Z",
+  "projects": [
+    {
+      "id": "prj_mte2mcxpbxnve",
+      "title": "Brown Ion - Ornate Restaurant Content Shoot",
+      "startDate": "2026-08-23",
+      "endDate": "2026-08-23",
+      "deliverables": "Raw Data",
+      "payment": 5000,
+      "expenses": 0,
+      "expenseItems": [],
+      "status": "pending",
+      "paymentRecords": [],
+      "createdAt": 1787989226749,
+      "updatedAt": 1787989226749
+    },
+    {
+      "id": "prj_mte2ovd2022w1",
+      "title": "Mark Tailor Catalogue Shoot - Videos",
+      "startDate": "2026-08-08",
+      "endDate": "2026-08-09",
+      "deliverables": "Raw Data",
+      "payment": 34710,
+      "expenses": 22500,
+      "expenseItems": [
+        {
+          "title": "Gear Rental",
+          "amount": 22500
+        }
+      ],
+      "status": "pending",
+      "paymentRecords": [
+        {
+          "id": "py_mte2scf4xpp0r",
+          "amount": 10000,
+          "date": "2026-08-01",
+          "method": "Cash",
+          "note": "Advance #1",
+          "createdAt": 1787989506016
+        },
+        {
+          "id": "py_mte2tknn1d6uz",
+          "amount": 10000,
+          "date": "2026-08-13",
+          "method": "UPI",
+          "note": "Advance #2",
+          "createdAt": 1787989563347
+        }
+      ],
+      "createdAt": 1787989343942,
+      "updatedAt": 1787989563347
+    }
+  ],
+  "shoots": [
+    {
+      "id": "prj_mte2mcxpbxnve",
+      "title": "Brown Ion - Ornate Restaurant Content Shoot",
+      "startDate": "2026-08-23",
+      "endDate": "2026-08-23",
+      "deliverables": "Raw Data",
+      "payment": 5000,
+      "expenses": 0,
+      "expenseItems": [],
+      "status": "pending",
+      "paymentRecords": [],
+      "createdAt": 1787989226749,
+      "updatedAt": 1787989226749
+    },
+    {
+      "id": "prj_mte2ovd2022w1",
+      "title": "Mark Tailor Catalogue Shoot - Videos",
+      "startDate": "2026-08-08",
+      "endDate": "2026-08-09",
+      "deliverables": "Raw Data",
+      "payment": 34710,
+      "expenses": 22500,
+      "expenseItems": [
+        {
+          "title": "Gear Rental",
+          "amount": 22500
+        }
+      ],
+      "status": "pending",
+      "paymentRecords": [
+        {
+          "id": "py_mte2scf4xpp0r",
+          "amount": 10000,
+          "date": "2026-08-01",
+          "method": "Cash",
+          "note": "Advance #1",
+          "createdAt": 1787989506016
+        },
+        {
+          "id": "py_mte2tknn1d6uz",
+          "amount": 10000,
+          "date": "2026-08-13",
+          "method": "UPI",
+          "note": "Advance #2",
+          "createdAt": 1787989563347
+        }
+      ],
+      "createdAt": 1787989343942,
+      "updatedAt": 1787989563347
+    }
+  ]
+}

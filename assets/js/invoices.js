@@ -210,7 +210,7 @@
         if (logoBox) {
           logoBox.innerHTML = settings.logoDataUrl
             ? `<img src="${settings.logoDataUrl}" alt="logo">`
-            : `<img src="logo 1.0 dark.png" alt="Luminav Logo" class="brand-logo-img">`;
+            : `<img src="assets/images/logo-dark.png" alt="Luminav Logo" class="brand-logo-img">`;
         }
 
         document.getElementById('metaDate').textContent = formatDisplayDate(invoice.date);
@@ -369,7 +369,7 @@
         if (preview) {
           preview.innerHTML = settings.logoDataUrl
             ? `<img src="${settings.logoDataUrl}" alt="logo">`
-            : `<img src="logo 1.0 dark.png" alt="Luminav Logo" class="brand-logo-img">`;
+            : `<img src="assets/images/logo-dark.png" alt="Luminav Logo" class="brand-logo-img">`;
         }
       }
 
@@ -988,7 +988,7 @@
         document.body.style.filter = 'blur(6px)';
         document.body.style.transition = 'transform 0.42s cubic-bezier(0.76, 0, 0.24, 1), opacity 0.42s';
         setTimeout(() => {
-          window.location.href = 'shoot_tracker.html';
+          window.location.href = 'tracker.html';
         }, 380);
       };
 

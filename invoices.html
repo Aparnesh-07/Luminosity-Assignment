@@ -9,7 +9,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&family=Outfit:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=Urbanist:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <script src="html2pdf.bundle.min.js"></script>
+  <script src="assets/js/vendor/html2pdf.bundle.min.js"></script>
   <script>
     if (typeof html2pdf === 'undefined') {
       const s = document.createElement('script');
@@ -17,7 +17,7 @@
       document.head.appendChild(s);
     }
   </script>
-  <link rel="stylesheet" href="invoiceGeneratorLuminavFilms.css">
+  <link rel="stylesheet" href="assets/css/invoices.css">
 
 </head>
 
@@ -26,11 +26,11 @@
   <!-- =========================================================================
        LEFT FRAME HOVER STRIP (SLIDE TO PROJECT TRACKER)
        ========================================================================= -->
-  <a href="shoot_tracker.html" class="left-edge-strip" id="leftTrackerStrip" onclick="window.slideTransitionToTracker(event)" title="Click to Slide into Project Tracker">
+  <a href="tracker.html" class="left-edge-strip" id="leftTrackerStrip" onclick="window.slideTransitionToTracker(event)" title="Click to Slide into Project Tracker">
     <div class="left-strip-drawer-body">
       <div class="left-strip-header">
         <div class="left-strip-mark">
-          <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+          <img src="assets/images/logo-dark.png" alt="Luminosity Logo" class="brand-logo-img">
         </div>
         <div class="left-strip-title">Project Tracker</div>
       </div>
@@ -152,7 +152,7 @@
       <div class="brand">
         <div style="display:flex;align-items:center;gap:12px;">
           <div class="brand-mark">
-            <img src="logo 1.0 dark.png" alt="Luminosity Logo" class="brand-logo-img">
+            <img src="assets/images/logo-dark.png" alt="Luminosity Logo" class="brand-logo-img">
           </div>
           <div>
             <div class="brand-name">LUMINOSITY</div>
@@ -332,7 +332,7 @@
 
   </div>
 
-  <script src="invoiceGeneratorLuminavFilms.js"></script>
+  <script src="assets/js/invoices.js"></script>
 
 </body>
 

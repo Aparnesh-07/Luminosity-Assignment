@@ -69,12 +69,50 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get(['/health', '/api/health'], (req, res) => {
+app.get(['/health', '/api/health'], async (req, res) => {
+  let dbStatus = 'disconnected';
+  let dbError = null;
+  let tables = [];
+  try {
+    const { query } = require('./config/database');
+    const [rows] = await query('SHOW TABLES');
+    dbStatus = 'connected';
+    tables = rows.map((r) => Object.values(r)[0]);
+  } catch (err) {
+    dbStatus = 'error';
+    dbError = err.message;
+  }
   res.json({
     status: 'ok',
     uptime: process.uptime(),
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    database: {
+      status: dbStatus,
+      error: dbError,
+      tables
+    }
   });
+});
+
+app.get('/api/setup-db', async (req, res) => {
+  try {
+    const { initDatabase, query } = require('./config/database');
+    const { ensureSeedAdmin } = require('./services/auth.service');
+    await initDatabase();
+    await ensureSeedAdmin();
+    const [rows] = await query('SHOW TABLES');
+    res.json({
+      success: true,
+      message: 'Database migrated and seeded successfully!',
+      tables: rows.map((r) => Object.values(r)[0])
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+      stack: err.stack
+    });
+  }
 });
 
 // Mount API routes

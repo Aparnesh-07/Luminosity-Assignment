@@ -3,6 +3,8 @@
   "version": "2.0.0",
   "description": "Luminosity Studio Portal — Full-Stack React + Node.js + Express + MySQL Application",
   "scripts": {
+    "start": "cd server && npm start",
+    "build": "cd server && npm install",
     "db:start": "/Applications/XAMPP/xamppfiles/sbin/mysqld --no-defaults --datadir=$(pwd)/server/data/mysql --port=3306 --socket=$(pwd)/server/data/mysql.sock --bind-address=127.0.0.1 &",
     "db:stop": "/Applications/XAMPP/xamppfiles/bin/mysqladmin -u root --socket=$(pwd)/server/data/mysql.sock shutdown",
     "start:server": "cd server && npm start",

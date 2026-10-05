@@ -28,8 +28,27 @@ app.use(
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL || true,
-    credentials: true
+    origin: (origin, callback) => {
+      // Allow requests with no origin (e.g. mobile apps, curl, Postman)
+      if (!origin) return callback(null, true);
+
+      // Automatically allow all Vercel domains (production & branch previews) and localhost
+      if (origin.endsWith('.vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return callback(null, true);
+      }
+
+      // If a specific CLIENT_URL is defined and matches, allow it
+      const clientUrl = process.env.CLIENT_URL;
+      if (clientUrl && (clientUrl === '*' || clientUrl === origin)) {
+        return callback(null, true);
+      }
+
+      // Fallback: allow the origin
+      return callback(null, true);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
   })
 );
 

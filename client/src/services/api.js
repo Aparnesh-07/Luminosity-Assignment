@@ -1,6 +1,10 @@
 function getApiBase() {
-  const envUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
+  let envUrl = (import.meta.env.VITE_API_URL || '').trim().replace(/\/$/, '');
   if (!envUrl) return '/api';
+  // If protocol was omitted (e.g. "my-app.up.railway.app"), automatically prepend https://
+  if (!/^https?:\/\//i.test(envUrl)) {
+    envUrl = `https://${envUrl}`;
+  }
   return envUrl.endsWith('/api') ? envUrl : `${envUrl}/api`;
 }
 const API_BASE = getApiBase();

@@ -41,8 +41,16 @@ app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 const uploadsPath = path.join(__dirname, '../uploads');
 app.use('/uploads', express.static(uploadsPath));
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
+// Root and health check endpoints
+app.get('/', (req, res) => {
+  res.json({
+    name: 'Luminosity Studio Suite API',
+    status: 'online',
+    health: '/api/health'
+  });
+});
+
+app.get(['/health', '/api/health'], (req, res) => {
   res.json({
     status: 'ok',
     uptime: process.uptime(),

@@ -95,14 +95,15 @@ exports.register = async ({ email, password, name, studioName = 'Luminav Films' 
 /**
  * Authenticate user with email and password
  */
-exports.login = async ({ email, password }) => {
+exports.login = async ({ identifier, email, password }) => {
+  const loginId = identifier || email;
   const [users] = await query(
     `SELECT u.id, u.email, u.password_hash, u.name, u.role, 
             s.id as studio_id, s.name as studio_name 
      FROM users u 
      LEFT JOIN studios s ON s.owner_id = u.id 
-     WHERE u.email = ? LIMIT 1`,
-    [email]
+     WHERE u.email = ? OR u.name = ? LIMIT 1`,
+    [loginId, loginId]
   );
 
   if (!users || users.length === 0) {

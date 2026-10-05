@@ -20,12 +20,13 @@ exports.register = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
-      return error(res, 'Email and password are required', 400);
+    const { email, username, identifier, password } = req.body;
+    const loginIdentifier = identifier || email || username;
+    if (!loginIdentifier || !password) {
+      return error(res, 'Username or email and password are required', 400);
     }
 
-    const data = await authService.login({ email, password });
+    const data = await authService.login({ identifier: loginIdentifier, password });
     return success(res, data, 'Login successful');
   } catch (err) {
     return error(res, err.message, 401);

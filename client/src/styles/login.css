@@ -1,0 +1,338 @@
+/* =========================================================================
+   LUMINOSITY STUDIO PORTAL — ORIGINAL EXACT CSS FROM index.html
+   ========================================================================= */
+
+.login-page-root {
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-title);
+  user-select: none;
+  position: relative;
+}
+
+/* ---- BACKGROUND CANVAS & AMBIENT AURA ---- */
+#bgCanvas {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  z-index: 1; pointer-events: none;
+}
+.ambient-glow-1 {
+  position: fixed; top: -20%; left: -10%; width: 70vw; height: 70vw;
+  background: radial-gradient(circle, rgba(217, 164, 99, 0.08) 0%, rgba(0,0,0,0) 65%);
+  z-index: 2; pointer-events: none; filter: blur(60px);
+  animation: driftAura 18s ease-in-out infinite alternate;
+}
+.ambient-glow-2 {
+  position: fixed; bottom: -20%; right: -10%; width: 65vw; height: 65vw;
+  background: radial-gradient(circle, rgba(185, 128, 60, 0.07) 0%, rgba(0,0,0,0) 70%);
+  z-index: 2; pointer-events: none; filter: blur(60px);
+  animation: driftAura 14s ease-in-out infinite alternate-reverse;
+}
+@keyframes driftAura {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.15); }
+}
+
+/* ---- MAIN PORTAL CONTAINER ---- */
+.portal-wrapper {
+  position: relative; z-index: 10;
+  width: 100vw; height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  background: rgba(28, 26, 23, 0.92);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  border: 1px solid var(--border-highlight);
+  border-radius: 24px;
+  padding: 46px 42px 34px;
+  width: 100%;
+  max-width: 440px;
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.8), 0 0 45px rgba(217, 164, 99, 0.08);
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.45s var(--ease-out), opacity 0.45s var(--ease-out), filter 0.45s var(--ease-out);
+}
+.login-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent 5%, var(--accent) 50%, transparent 95%);
+  opacity: 0.8;
+}
+
+/* Brand Icon & Shutter Aura */
+.brand-aperture-wrap {
+  position: relative; width: 84px; height: 84px; margin-bottom: 22px;
+  display: flex; align-items: center; justify-content: center;
+}
+.aperture-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1.5px dashed rgba(217, 164, 99, 0.45);
+  animation: rotateAperture 24s linear infinite;
+}
+.aperture-ring-outer {
+  position: absolute; inset: -8px; border-radius: 50%;
+  border: 1px solid rgba(217, 164, 99, 0.2);
+  animation: rotateAperture 36s linear infinite reverse;
+}
+@keyframes rotateAperture {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+.brand-badge {
+  width: 64px; height: 64px; border-radius: 18px;
+  background: #1c1a17;
+  border: 1.5px solid var(--border-accent);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 32px var(--accent-glow), 0 8px 20px rgba(0, 0, 0, 0.5);
+  position: relative; z-index: 2;
+  padding: 8px;
+  overflow: hidden;
+  transition: transform 0.3s var(--ease-spring);
+}
+.brand-logo-img {
+  width: 100%; height: 100%; object-fit: contain;
+  filter: drop-shadow(0 0 6px rgba(217, 164, 99, 0.45));
+}
+.brand-aperture-wrap:hover .brand-badge {
+  transform: scale(1.08) rotate(3deg);
+}
+
+/* Typography */
+.portal-title {
+  font-family: var(--font-brand);
+  font-size: 30px; font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+.portal-subtitle {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+.status-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  padding: 5px 12px; border-radius: 99px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--text-secondary);
+  margin-bottom: 26px;
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: #68bb76;
+  box-shadow: 0 0 8px #68bb76;
+  animation: statusPulse 2s infinite ease-in-out alternate;
+}
+@keyframes statusPulse {
+  0% { opacity: 0.6; transform: scale(0.9); }
+  100% { opacity: 1; transform: scale(1.2); }
+}
+
+/* Password / Key Input Form */
+.login-form { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.input-wrapper { position: relative; width: 100%; text-align: left; }
+.input-label {
+  display: block; font-family: var(--font-mono); font-size: 10.5px;
+  text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.portal-input {
+  width: 100%; background: #141210;
+  border: 1px solid var(--border-highlight);
+  border-radius: 10px; padding: 12px 16px;
+  color: var(--text-primary); font-family: var(--font-mono); font-size: 14px;
+  outline: none; transition: all 0.25s var(--ease-out);
+  letter-spacing: 0.1em;
+}
+.portal-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-dim), 0 0 20px rgba(217, 164, 99, 0.2);
+}
+
+/* Center Enter Portal Button */
+.portal-btn {
+  position: relative; width: 100%;
+  padding: 15px 24px;
+  margin-top: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(217, 164, 99, 0.55);
+  background: radial-gradient(circle at 50% 0%, #f7d29d 0%, #d9a463 60%, #b9803c 100%);
+  color: #12100e;
+  font-family: var(--font-title);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  overflow: hidden;
+  box-shadow: 0 10px 28px rgba(217, 164, 99, 0.35), 0 0 40px rgba(217, 164, 99, 0.18);
+  transition: all 0.25s var(--ease-out);
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+}
+.portal-btn::before {
+  content: ''; position: absolute; inset: 1px;
+  border-radius: 11px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0) 60%);
+  pointer-events: none;
+}
+.portal-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 14px 38px rgba(217, 164, 99, 0.5), 0 0 60px rgba(217, 164, 99, 0.3);
+}
+.portal-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.portal-btn.authenticating {
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, #86efac 0%, #22c55e 60%, #15803d 100%);
+  color: #0c2010;
+  border-color: #86efac;
+  box-shadow: 0 0 35px rgba(34, 197, 94, 0.5);
+}
+
+/* Copyright Footer */
+.portal-copyright {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border-subtle);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  width: 100%;
+}
+
+/* =========================================================================
+   SATISFYING PRECISION CINEMA SHUTTER REVEAL SYSTEM
+   ========================================================================= */
+#shutterStage {
+  position: fixed; inset: 0; width: 100vw; height: 100vh;
+  z-index: 999; pointer-events: none;
+  display: none;
+}
+#shutterStage.active { display: block; pointer-events: auto; }
+
+/* Upper & Lower Film Gate Shutter Panels */
+.shutter-panel {
+  position: absolute; left: 0; right: 0; width: 100%; height: 50%;
+  background: #141210;
+  z-index: 1002;
+  will-change: transform;
+}
+.shutter-top {
+  top: 0;
+  transform: translateY(-101%);
+  border-bottom: 2px solid var(--accent);
+  box-shadow: 0 10px 40px rgba(217, 164, 99, 0.35);
+}
+.shutter-bottom {
+  bottom: 0;
+  transform: translateY(101%);
+  border-top: 2px solid var(--accent);
+  box-shadow: 0 -10px 40px rgba(217, 164, 99, 0.35);
+}
+
+/* Smooth Shutter Animations */
+.shutter-top.snap-shut {
+  transform: translateY(0%);
+  transition: transform 0.42s var(--ease-shutter);
+}
+.shutter-bottom.snap-shut {
+  transform: translateY(0%);
+  transition: transform 0.42s var(--ease-shutter);
+}
+
+.shutter-top.snap-open {
+  transform: translateY(-101%);
+  transition: transform 0.55s var(--ease-out);
+}
+.shutter-bottom.snap-open {
+  transform: translateY(101%);
+  transition: transform 0.55s var(--ease-out);
+}
+
+/* Anamorphic Golden Laser Horizon Beam */
+.horizon-laser {
+  position: absolute; top: 50%; left: 0; right: 0; height: 3px;
+  transform: translateY(-50%) scaleX(0);
+  background: linear-gradient(90deg, transparent 0%, #ffffff 50%, transparent 100%),
+              linear-gradient(90deg, transparent 0%, var(--accent) 50%, transparent 100%);
+  box-shadow: 0 0 35px var(--accent), 0 0 70px #ffffff;
+  z-index: 1005; opacity: 0;
+  transition: transform 0.25s var(--ease-out), opacity 0.2s;
+}
+.horizon-laser.flare {
+  transform: translateY(-50%) scaleX(1);
+  opacity: 1;
+}
+
+/* Viewfinder HUD Overlay */
+.viewfinder-hud {
+  position: absolute; inset: 40px;
+  pointer-events: none; opacity: 0;
+  transition: opacity 0.25s ease-out;
+  z-index: 1006;
+}
+.hud-bracket {
+  position: absolute; width: 32px; height: 32px;
+  border-color: var(--accent); border-style: solid;
+}
+.b-tl { top: 0; left: 0; border-width: 2px 0 0 2px; }
+.b-tr { top: 0; right: 0; border-width: 2px 2px 0 0; }
+.b-bl { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
+.b-br { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
+
+.hud-rec-tag {
+  position: absolute; top: 8px; right: 8px;
+  font-family: var(--font-mono); font-size: 11px;
+  color: var(--accent); letter-spacing: 0.08em;
+  display: flex; align-items: center; gap: 6px;
+}
+.hud-rec-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: #ef4444; box-shadow: 0 0 10px #ef4444;
+}
+
+/* Center Aperture Iris Silhouette */
+.aperture-core {
+  position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.4);
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  border: 1px solid rgba(217, 164, 99, 0.35);
+  box-shadow: 0 0 50px rgba(217, 164, 99, 0.15), inset 0 0 40px rgba(217, 164, 99, 0.1);
+  opacity: 0;
+  transition: transform 0.5s var(--ease-out), opacity 0.3s;
+  z-index: 1004;
+  display: flex; align-items: center; justify-content: center;
+}
+.aperture-core.visible {
+  opacity: 1; transform: translate(-50%, -50%) scale(1);
+}
+.aperture-inner-cross {
+  width: 100%; height: 100%;
+  position: relative;
+}
+.aperture-inner-cross::before, .aperture-inner-cross::after {
+  content: ''; position: absolute; background: rgba(217, 164, 99, 0.4);
+}
+.aperture-inner-cross::before { top: 50%; left: 15%; right: 15%; height: 1px; }
+.aperture-inner-cross::after { left: 50%; top: 15%; bottom: 15%; width: 1px; }
+
+/* Radiant Flash Bloom Finale */
+.radiant-bloom-flash {
+  position: absolute; inset: 0; width: 100vw; height: 100vh;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.95) 0%, rgba(217,164,99,0.7) 40%, rgba(20,18,16,0.98) 85%);
+  opacity: 0; z-index: 1010; pointer-events: none;
+  transition: opacity 0.35s ease-out;
+}

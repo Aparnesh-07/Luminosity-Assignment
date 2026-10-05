@@ -563,6 +563,10 @@ textarea.form-control {
   animation: slideToast 0.25s ease-out forwards;
 }
 
+.toast:empty {
+  display: none !important;
+}
+
 .toast.error {
   border-color: var(--danger);
   background: #251414;

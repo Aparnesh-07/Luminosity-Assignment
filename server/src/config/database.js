@@ -3,18 +3,31 @@ const path = require('path');
 const fs = require('fs');
 require('dotenv').config({ path: path.join(__dirname, '../../.env') });
 
-const dbConfig = {
-  host: process.env.DB_HOST || '127.0.0.1',
-  port: parseInt(process.env.DB_PORT, 10) || 3306,
-  user: process.env.DB_USER || 'root',
-  password: process.env.DB_PASSWORD || '',
-  database: process.env.DB_NAME || 'luminosity_db',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-  multipleStatements: true,
-  decimalNumbers: true
-};
+const hasUri = Boolean(process.env.MYSQL_URL || process.env.DATABASE_URL);
+
+const dbConfig = hasUri
+  ? {
+      uri: process.env.MYSQL_URL || process.env.DATABASE_URL,
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      multipleStatements: true,
+      decimalNumbers: true,
+      ssl: process.env.DB_SSL === 'false' ? undefined : { rejectUnauthorized: false }
+    }
+  : {
+      host: process.env.MYSQLHOST || process.env.DB_HOST || '127.0.0.1',
+      port: parseInt(process.env.MYSQLPORT || process.env.DB_PORT, 10) || 3306,
+      user: process.env.MYSQLUSER || process.env.DB_USER || 'root',
+      password: process.env.MYSQLPASSWORD || process.env.DB_PASSWORD || '',
+      database: process.env.MYSQLDATABASE || process.env.DB_NAME || 'luminosity_db',
+      waitForConnections: true,
+      connectionLimit: 10,
+      queueLimit: 0,
+      multipleStatements: true,
+      decimalNumbers: true,
+      ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : undefined
+    };
 
 let pool = null;
 
@@ -30,19 +43,22 @@ function getPool() {
  */
 async function initDatabase() {
   try {
-    // First connect without specifying database to ensure DB exists
-    const rootConnection = await mysql.createConnection({
-      host: dbConfig.host,
-      port: dbConfig.port,
-      user: dbConfig.user,
-      password: dbConfig.password,
-      multipleStatements: true
-    });
+    // If not using a managed URI with pre-created DB, ensure DB exists
+    if (!hasUri) {
+      const rootConnection = await mysql.createConnection({
+        host: dbConfig.host,
+        port: dbConfig.port,
+        user: dbConfig.user,
+        password: dbConfig.password,
+        multipleStatements: true,
+        ssl: dbConfig.ssl
+      });
 
-    await rootConnection.query(
-      `CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-    );
-    await rootConnection.end();
+      await rootConnection.query(
+        `CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+      );
+      await rootConnection.end();
+    }
 
     // Now connect to the database and run schema migration
     const dbPool = getPool();

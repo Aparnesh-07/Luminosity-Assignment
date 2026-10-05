@@ -1,4 +1,4 @@
-const API_BASE = '/api';
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '') + '/api';
 
 /**
  * Core HTTP Request Handler
@@ -38,10 +38,10 @@ async function request(endpoint, options = {}) {
 // ---------------------------------------------------------------------------
 // AUTHENTICATION
 // ---------------------------------------------------------------------------
-export const login = (email, password) =>
+export const login = (emailOrUsername, password) =>
   request('/auth/login', {
     method: 'POST',
-    body: JSON.stringify({ email, password })
+    body: JSON.stringify({ identifier: emailOrUsername, email: emailOrUsername, password })
   });
 
 export const register = (data) =>

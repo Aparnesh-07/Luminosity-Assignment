@@ -2,12 +2,6 @@
 -- LUMINOSITY STUDIO SUITE — MySQL Database Schema
 -- =====================================================
 
-CREATE DATABASE IF NOT EXISTS luminosity_db
-  CHARACTER SET utf8mb4
-  COLLATE utf8mb4_unicode_ci;
-
-USE luminosity_db;
-
 -- 1. USERS
 CREATE TABLE IF NOT EXISTS users (
   id            INT AUTO_INCREMENT PRIMARY KEY,

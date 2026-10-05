@@ -43,21 +43,26 @@ function getPool() {
  */
 async function initDatabase() {
   try {
-    // If not using a managed URI with pre-created DB, ensure DB exists
+    // If not using a managed URI with pre-created DB, attempt to ensure DB exists
     if (!hasUri) {
-      const rootConnection = await mysql.createConnection({
-        host: dbConfig.host,
-        port: dbConfig.port,
-        user: dbConfig.user,
-        password: dbConfig.password,
-        multipleStatements: true,
-        ssl: dbConfig.ssl
-      });
+      try {
+        const rootConnection = await mysql.createConnection({
+          host: dbConfig.host,
+          port: dbConfig.port,
+          user: dbConfig.user,
+          password: dbConfig.password,
+          multipleStatements: true,
+          ssl: dbConfig.ssl
+        });
 
-      await rootConnection.query(
-        `CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
-      );
-      await rootConnection.end();
+        await rootConnection.query(
+          `CREATE DATABASE IF NOT EXISTS \`${dbConfig.database}\` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;`
+        );
+        await rootConnection.end();
+      } catch (dbCreateErr) {
+        // Ignored on managed cloud databases where the database already exists
+        console.warn('ℹ️ Managed database in use, continuing with schema migration...');
+      }
     }
 
     // Now connect to the database and run schema migration

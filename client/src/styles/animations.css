@@ -1,0 +1,152 @@
+/* =========================================================================
+   CINEMATIC AMBIENT & CAMERA OPTICS ANIMATIONS
+   ========================================================================= */
+
+@keyframes rotateApertureSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes rotateApertureReverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+@keyframes laserFlare {
+  0% { transform: scaleX(0.01); opacity: 0; }
+  40% { transform: scaleX(1); opacity: 1; filter: blur(2px); }
+  100% { transform: scaleX(1.4); opacity: 0; filter: blur(12px); }
+}
+
+@keyframes dropletExpand {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; border-width: 4px; }
+  100% { transform: translate(-50%, -50%) scale(35); opacity: 0; border-width: 1px; }
+}
+
+/* Ambient glow orbs */
+.ambient-glow-1 {
+  position: fixed;
+  top: -10vw;
+  left: -10vw;
+  width: 45vw;
+  height: 45vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(217, 164, 99, 0.12) 0%, rgba(18, 16, 14, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 12s ease-in-out infinite;
+}
+
+.ambient-glow-2 {
+  position: fixed;
+  bottom: -15vw;
+  right: -10vw;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(185, 128, 60, 0.09) 0%, rgba(18, 16, 14, 0) 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: pulseGlow 16s ease-in-out infinite reverse;
+}
+
+/* Water Droplet Splash Ring */
+.droplet-splash-ring {
+  position: fixed;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 3px solid var(--accent);
+  box-shadow: 0 0 24px var(--accent-glow);
+  pointer-events: none;
+  z-index: 9999;
+  animation: dropletExpand 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Shutter Stage Overlay */
+.shutter-stage {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10000;
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.shutter-stage.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.shutter-blade-top,
+.shutter-blade-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 50.5vh;
+  background: #080706;
+  z-index: 2;
+  transition: transform 0.45s var(--ease-shutter);
+}
+
+.shutter-blade-top {
+  top: 0;
+  transform: translateY(-100%);
+  border-bottom: 1px solid rgba(217, 164, 99, 0.3);
+}
+
+.shutter-blade-bottom {
+  bottom: 0;
+  transform: translateY(100%);
+  border-top: 1px solid rgba(217, 164, 99, 0.3);
+}
+
+.shutter-blade-top.snap-shut {
+  transform: translateY(0%);
+}
+
+.shutter-blade-bottom.snap-shut {
+  transform: translateY(0%);
+}
+
+.shutter-blade-top.snap-open {
+  transform: translateY(-100%);
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.shutter-blade-bottom.snap-open {
+  transform: translateY(100%);
+  transition: transform 0.5s var(--ease-spring);
+}
+
+.horizon-laser {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #fff 25%, var(--accent) 50%, #fff 75%, transparent);
+  box-shadow: 0 0 30px #ffffff, 0 0 60px var(--accent);
+  opacity: 0;
+  z-index: 3;
+}
+
+.horizon-laser.flare {
+  animation: laserFlare 0.45s ease-out forwards;
+}
+
+.bloom-flash {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(217, 164, 99, 0.4) 60%, transparent 100%);
+  opacity: 0;
+  z-index: 4;
+  pointer-events: none;
+  transition: opacity 0.3s ease-out;
+}

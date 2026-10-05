@@ -1,0 +1,23 @@
+{
+  "name": "luminosity-workspace",
+  "version": "2.0.0",
+  "description": "Luminosity Studio Portal — Full-Stack React + Node.js + Express + MySQL Application",
+  "scripts": {
+    "start:server": "cd server && npm start",
+    "dev:server": "cd server && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "build:client": "cd client && npm run build",
+    "migrate": "cd server && npm run migrate",
+    "seed": "cd server && npm run seed"
+  },
+  "keywords": [
+    "luminosity",
+    "studio-portal",
+    "full-stack",
+    "react",
+    "express",
+    "mysql"
+  ],
+  "author": "Luminav Films",
+  "license": "MIT"
+}
